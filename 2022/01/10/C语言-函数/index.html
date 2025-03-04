@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、函数1.1 什么是函数函数：完成特定功能的程序段维基百科对函数的定义：子程序&emsp;&emsp;1.在计算机科学中，子程序是一个大型程序中的某部分代码，由一个或多个语句块组成。它负责完成某项特定任务，而且相较于其他代码，具有相对独立性。&emsp;&emsp;2.一般会有输入参数并有返回值，提供了对实现过程的封装和细节的隐藏。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言 函数">
+<meta property="og:url" content="https://blog.kjlcloud.com/2022/01/10/C%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、函数1.1 什么是函数函数：完成特定功能的程序段维基百科对函数的定义：子程序&emsp;&emsp;1.在计算机科学中，子程序是一个大型程序中的某部分代码，由一个或多个语句块组成。它负责完成某项特定任务，而且相较于其他代码，具有相对独立性。&emsp;&emsp;2.一般会有输入参数并有返回值，提供了对实现过程的封装和细节的隐藏。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/cdb6167dc50a354053d2c6ce25c2a67c.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/961413cb50183671bb788daee8e1746c.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/5c336de62b01f1b2c377d219a58545b1.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/d349c0c223fc172031b19f7cfeedd535.png#pic_center">
+<meta property="article:published_time" content="2022-01-10T08:24:58.000Z">
+<meta property="article:modified_time" content="2022-01-10T08:24:58.000Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="函数">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/blog_migrate/cdb6167dc50a354053d2c6ce25c2a67c.png#pic_center">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/2022/01/10/C%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/2022/01/10/C%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/","path":"2022/01/10/C语言-函数/","title":"C语言 函数"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C语言 函数 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%87%BD%E6%95%B0"><span class="nav-text">一、函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%87%BD%E6%95%B0"><span class="nav-text">1.1 什么是函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-C%E8%AF%AD%E8%A8%80%E4%B8%AD%E5%87%BD%E6%95%B0%E5%88%86%E7%B1%BB"><span class="nav-text">1.2 C语言中函数分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%A3%B0%E6%98%8E"><span class="nav-text">二、函数定义与声明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">2.1函数的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1%E5%87%BD%E6%95%B0%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="nav-text">2.1函数的声明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%86%99%E5%87%BD%E6%95%B0%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="nav-text">三、写函数小技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1%E5%88%A4%E6%96%AD%E8%B4%A8%E6%95%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">3.1判断质数的函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%B1%82%E7%AC%ACn%E4%B8%AA%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0"><span class="nav-text">3.2 求第n个斐波那契数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="nav-text">四、函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1%E5%AE%9E%E5%8F%82%E4%B8%8E%E5%BD%A2%E5%8F%82"><span class="nav-text">4.1实参与形参</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2%E4%BC%A0%E5%80%BC%E8%B0%83%E7%94%A8%E4%B8%8E%E4%BC%A0%E5%9D%80%E8%B0%83%E7%94%A8"><span class="nav-text">4.2传值调用与传址调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3%E5%B5%8C%E5%A5%97%E8%B0%83%E7%94%A8%E5%92%8C%E9%93%BE%E5%BC%8F%E8%AE%BF%E9%97%AE"><span class="nav-text">4.3嵌套调用和链式访问</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JiaLong-Kang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kjialong@163.com" title="E-Mail → mailto:kjialong@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://coolshell.cn/" title="https:&#x2F;&#x2F;coolshell.cn" rel="noopener" target="_blank">左耳朵耗子</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/2022/01/10/C%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C语言 函数 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C语言 函数
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-01-10 16:24:58" itemprop="dateCreated datePublished" datetime="2022-01-10T16:24:58+08:00">2022-01-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-language/" itemprop="url" rel="index"><span itemprop="name">C language</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>28 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><meta name="referrer" content="no-referrer"/>
+
+<h1 id="一、函数"><a href="#一、函数" class="headerlink" title="一、函数"></a>一、函数</h1><h2 id="1-1-什么是函数"><a href="#1-1-什么是函数" class="headerlink" title="1.1 什么是函数"></a>1.1 什么是函数</h2><p>函数：完成特定功能的程序段<br>维基百科对函数的定义：子程序<br>&emsp;&emsp;1.在计算机科学中，子程序是一个大型程序中的某部分代码，由一个或多个语句块组成。它负责完成某项特定任务，而且相较于其他代码，<strong>具有相对独立性</strong>。<br>&emsp;&emsp;2.一般会有输入参数并有返回值，提供了对<strong>实现过程的封装和细节的隐藏</strong>。</p>
+<span id="more"></span>
+
+<h2 id="1-2-C语言中函数分类"><a href="#1-2-C语言中函数分类" class="headerlink" title="1.2 C语言中函数分类"></a>1.2 C语言中函数分类</h2><p>函数主要分为两大类：库函数和自定义函数</p>
+<p><strong>库函数</strong>：编译器提供的可在C源程序中调用的函数。库函数又分为两类，一类是C语言标准规定的库函数，一类是编译器特定的库函数（如：MSVC编译器提供的scanf_s函数）。由于版权原因，库函数的源代码一般不可见，但在头文件中可以看到它对外提供的接口)</p>
+<p>使用库函数需要引用对应头文件： #include&emsp; &lt;文件名&gt;<br>库函数参考手册网址：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.cplusplus.com/">http://www.cplusplus.com/</a></p>
+</blockquote>
+<p><strong>自定义函数</strong>：程序员根据需要编写的函数，也是本文谈论的重点</p>
+<h1 id="二、函数定义与声明"><a href="#二、函数定义与声明" class="headerlink" title="二、函数定义与声明"></a>二、函数定义与声明</h1><h2 id="2-1函数的定义"><a href="#2-1函数的定义" class="headerlink" title="2.1函数的定义"></a>2.1函数的定义</h2><p>函数的定义：一个函数的具体实现<br>语法：<br><strong>返回类型&emsp;函数名(形参列表){<br>&emsp;&emsp;功能代码；<br>}</strong></p>
+<p>返回类型：一个函数执行完后可以返回特定的值给主程序，返回类型就是指定返回值的数据类型，<strong>如果不需要返回值，此时写上void</strong>。<strong>如果有返回值，在功能代码部分必要要有return语句</strong>;</p>
+<p>函数名：一个标识符，应该尽量使用能表明函数功能的名字，比如一个求和的函数可以使用sum命名</p>
+<p>形参列表：什么是形参后面会讲到，这里先理解成参数列表。指需要传入到函数内的参数，当不要参数时为空，需要参数时要写上参数类型和参数名</p>
+<p>功能代码：大括号内是函数的功能代码，是函数功能具体的实现代码</p>
+<p>return: 终止当前函数执行，并返回return后面的值（<strong>类型必须与返回类型相同</strong>）。如果函数中没有return语句，那么只有遇到函数反大括号才会结束函数的执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义了一个求两值相加和的函数，函数返回类型是int，所以只能求整数相加。</span></span><br><span class="line"><span class="comment">//函数名为sum,函数需要两个形式参数，分别是x、y且都为int类型</span></span><br><span class="line"><span class="comment">//函数最后返回 x+y的值</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123; </span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义了一个打印函数，函数没有返回值，不需要传入参数，函数名为print</span></span><br><span class="line"><span class="comment">//执行此函数输出欢迎访问我的博客，由于没有返回值，所以不需要使用return语句</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">print</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;欢迎访问我的博客\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-1函数的声明"><a href="#2-1函数的声明" class="headerlink" title="2.1函数的声明"></a>2.1函数的声明</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	result = sum(a, b);名叫sum的函数  <span class="comment">//编译是从上到下的顺序，编译时此处会报错或警告，因为此时找不到一个名为sum的函数</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数声明：<br>1.告诉编译器有一个函数叫什么，参数是什么，返回类型是什么，但是具体是不是存在，函数声明决定不了<br>2.函数的声明一般在函数使用之前出现，<strong>要满足先声明后使用</strong><br>3.函数声明一般要放在头文件内<br>4.<strong>函数定义出现在函数调用（使用）之前，可以省略函数声明</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123; <span class="comment">//函数定义在使用之前，这种情况可以不进行函数声明</span></span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	result = sum(a, b);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>函数声明语法</strong>： 返回类型 函数名(参数列表);</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>; <span class="comment">//函数声明</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	result = sum(a, b);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="三、写函数小技巧"><a href="#三、写函数小技巧" class="headerlink" title="三、写函数小技巧"></a>三、写函数小技巧</h1><p>写函数时候，首先要了解需求，即这个函数是干什么的、要解决什么问题。是否需要返回值，如果需要返回值类型是怎样的。是否需要传入参数。要做到<strong>高内聚低耦合</strong>。</p>
+<h2 id="3-1判断质数的函数"><a href="#3-1判断质数的函数" class="headerlink" title="3.1判断质数的函数"></a>3.1判断质数的函数</h2><p>分析：质数就是只能被1和本身整除的数字。如果被其他数字整除就不是质数。假设一个数n，那在<br> [2，n-1]的范围内用n对它们取余数都必须不等于0。但是我们可以继续优化，减少计算。我们对n开平方根。那么范围可以是[2，√n]。另外如果是1或2那么本身就是质数所以不需要计算。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">prime_number</span><span class="params">(<span class="type">int</span> n)</span> &#123; <span class="comment">//1 代表是质数  0 代表 不是质数</span></span><br><span class="line">	<span class="keyword">if</span> (n &lt;= <span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> i = <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">2</span>; i &lt;= <span class="built_in">sqrt</span>(n); i++) <span class="comment">// sqrt是开平方根的库函数，需要引用头文件math.h</span></span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (n % i == <span class="number">0</span>) <span class="comment">//如果在[2,√n]范围内的某个数被n取余数是0，就不是质数，终止函数的后续判断</span></span><br><span class="line">				<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;请输入一个数：》&quot;</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="keyword">if</span> (prime_number(n))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d是质数\n&quot;</span>, n);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d不是质数\n&quot;</span>, n);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入 </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4</span>不是质数</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-求第n个斐波那契数"><a href="#3-2-求第n个斐波那契数" class="headerlink" title="3.2 求第n个斐波那契数"></a>3.2 求第n个斐波那契数</h2><p>分析：斐波那契数列为： 1、1、2、3、5、8、13……，从第三个数开始，每个数的值等于前两个斐波那契数相加的值<br>f(x) &#x3D;  1  &emsp;  [1，2]<br>f(x) &#x3D;  f(x-2)  +  f(x-1)   &emsp; x&gt;2</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">fibonacci_number</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">	<span class="comment">//从第三个数开始，每个数的值等于前两个斐波那契数相加的值</span></span><br><span class="line">	<span class="comment">//定义三个变量，n1代表第一个数,n2代表第二个数,n3代表第三个数即我们所求的数</span></span><br><span class="line">	<span class="type">int</span> n1 = <span class="number">1</span>;</span><br><span class="line">	<span class="type">int</span> n2 = <span class="number">1</span>;</span><br><span class="line">	<span class="type">int</span> n3 = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">if</span> (n &lt;= <span class="number">2</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> n3; <span class="comment">//当求第1个或第2个斐波那契数时直接返回n3</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">3</span>; i &lt;= n; i++) <span class="comment">//i代表需要循环次数，由于前2个斐波那契数不需要求，所以i从3开始</span></span><br><span class="line">		&#123;</span><br><span class="line">			n3 = n1 + n2; </span><br><span class="line">			n1 = n2;</span><br><span class="line">			n2 = n3;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> n3; </span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;请输入需要求的第几个斐波那契数：》&quot;</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;第%d个斐波那契数为：%d&quot;</span>, n, fibonacci_number(n));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span></span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">第<span class="number">7</span>个斐波那契数为：<span class="number">13</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="四、函数调用"><a href="#四、函数调用" class="headerlink" title="四、函数调用"></a>四、函数调用</h1><p><strong>函数的调用就是函数的使用</strong>。函数调用通过使用函数调用运算符构成函数调用表达式实现。函数调用操作符是 ( )，函数调用表达式的一般形式：<br>&emsp; <strong>函数名(参数列表);</strong><br>函数没有参数时，( )内为空就行</p>
+<h2 id="4-1实参与形参"><a href="#4-1实参与形参" class="headerlink" title="4.1实参与形参"></a>4.1实参与形参</h2><p><strong>实参</strong>：函数调用操作符中的参数称为实际参数，简称实参，每个实参前面没有类型说明符，传入实参类型与个数必要与对应函数定义里面的相同</p>
+<p><strong>形参</strong>：函数定义中（）内的参数叫做形式参数，简称形参。<strong>形式参数只有在函数调用的过程中才会分配内存空间</strong>。形参在函数调用完成后<strong>就会自动销毁</strong>。因此形参只会在函数中有效。本质上形参只是实参的一份临时拷贝</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">0</span>;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	result = sum(a, b);  <span class="comment">//这里的a和b是实参</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">sum</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123; <span class="comment">//函数这里传入的x和y是形参</span></span><br><span class="line">	<span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-2传值调用与传址调用"><a href="#4-2传值调用与传址调用" class="headerlink" title="4.2传值调用与传址调用"></a>4.2传值调用与传址调用</h2><p>以下通过这个案例演示</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;<span class="comment">//交换x和y的值</span></span><br><span class="line">	<span class="type">int</span> tmp = x;  </span><br><span class="line">	x = y; </span><br><span class="line">	y = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a与b交换前：a=%d b=%d\n&quot;</span>, a, b);</span><br><span class="line">	swap(a, b);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a与b交换后：a=%d b=%d\n&quot;</span>, a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a与b交换前：a=<span class="number">10</span> b=<span class="number">20</span></span><br><span class="line">a与b交换后：a=<span class="number">10</span> b=<span class="number">20</span></span><br></pre></td></tr></table></figure>
+<p>我们可以发现，调用swap函数，a和b的值却没有交换。这是因为此时我们是传值调用。<br><strong>传值调用</strong>：形参和实参分别占用不同的内存区域，对形参的改变不会影响实参<br><img src="https://i-blog.csdnimg.cn/blog_migrate/cdb6167dc50a354053d2c6ce25c2a67c.png#pic_center" alt="在这里插入图片描述"><br><img src="https://i-blog.csdnimg.cn/blog_migrate/961413cb50183671bb788daee8e1746c.png#pic_center" alt="在这里插入图片描述"><br><img src="https://i-blog.csdnimg.cn/blog_migrate/5c336de62b01f1b2c377d219a58545b1.png#pic_center" alt="在这里插入图片描述"></p>
+<p>我们可以发现，实参a和b  与 形参x和y占用不同内存地址，通过传入实参a、b对形参x、y赋值后，实参a、b和形参x、y就没有任何关系了，所以对x、y的值的修改并不会影响实参a和b</p>
+<p><strong>传址调用</strong>：<strong>把函数外部创建变量的内存地址传递给函数的形参</strong>。这种传参方式可以让函数和函数外边的变量建立起真正的联系，也就是通过函数内部可以操作函数外部的变量</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span>* px, <span class="type">int</span>* py)</span> &#123;</span><br><span class="line">	<span class="type">int</span> tmp = *px;   <span class="comment">//整形指针变量px存的是a的地址,整形指针变量py存的是b的地址</span></span><br><span class="line">	*px = *py;     <span class="comment">//通过*号 解引用操作符找到pa变量所指向地址空间（a的空间）并更改存储的值</span></span><br><span class="line">	*py = tmp;		 <span class="comment">//通过*号 解引用操作符找到py变量所指向地址空间（b的空间）并更改存储的值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line">	<span class="type">int</span> b = <span class="number">20</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a与b交换前：a=%d b=%d\n&quot;</span>, a, b);</span><br><span class="line">	swap(a, b); <span class="comment">//传入的是a与b的地址</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;a与b交换后：a=%d b=%d\n&quot;</span>, a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a与b交换前：a=<span class="number">10</span> b=<span class="number">20</span></span><br><span class="line">a与b交换后：a=<span class="number">20</span> b=<span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/d349c0c223fc172031b19f7cfeedd535.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>简单来说，如果传入的是变量的地址就是传址调用，否则就是传值调用。当需要在函数内部改变外部变量的值时要使用传址调用</strong></p>
+<h2 id="4-3嵌套调用和链式访问"><a href="#4-3嵌套调用和链式访问" class="headerlink" title="4.3嵌套调用和链式访问"></a>4.3嵌套调用和链式访问</h2><p>嵌套调用：函数和函数之间可以根据实际的需求进行组合，即在函数内部调用另外一个函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;欢迎访问我的博客\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">void</span> <span class="title function_">test2</span><span class="params">()</span> &#123;</span><br><span class="line">	<span class="type">int</span> i = <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= <span class="number">5</span>; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		test1(); <span class="comment">//嵌套调用</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	test2();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">欢迎访问我的博客</span><br><span class="line">欢迎访问我的博客</span><br><span class="line">欢迎访问我的博客</span><br><span class="line">欢迎访问我的博客</span><br><span class="line">欢迎访问我的博客</span><br></pre></td></tr></table></figure>
+<p>链式访问：把一个函数返回值作为一个函数的参数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">max</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123; <span class="comment">//返回x与y的较大值</span></span><br><span class="line">	<span class="keyword">if</span> (x &gt; y)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> x;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> y;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">0</span>;</span><br><span class="line">	result = max(<span class="number">100</span>, max(<span class="number">10</span>, <span class="number">20</span>)); <span class="comment">//链式访问，将max(10,20)的返回值20作为参数传入max函数，即max(100,20)</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p><strong>函数可以嵌套调用，但是不能嵌套定义（不能在一个函数内定义另外一个函数）</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/2022/01/10/C%E8%AF%AD%E8%A8%80-%E5%87%BD%E6%95%B0/" title="C语言 函数">https://blog.kjlcloud.com/2022/01/10/C语言-函数/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%87%BD%E6%95%B0/" rel="tag"># 函数</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/09/%E5%87%A0%E4%B8%AA%E5%BE%AA%E7%8E%AF%E7%BB%83%E4%B9%A0%E9%A2%98%EF%BC%88%E4%B9%9D%E4%B9%9D%E4%B9%98%E6%B3%95%E8%A1%A8%E3%80%81%E9%87%91%E5%AD%97%E5%A1%94%E3%80%81%E7%8C%9C%E6%95%B0%E5%AD%97%E6%B8%B8%E6%88%8F%EF%BC%89/" rel="prev" title="几个循环练习题（九九乘法表、金字塔、猜数字游戏）">
+                  <i class="fa fa-angle-left"></i> 几个循环练习题（九九乘法表、金字塔、猜数字游戏）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/01/15/C%E8%AF%AD%E8%A8%80-%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="next" title="C语言 运算符">
+                  C语言 运算符 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">135k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">22:33</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>

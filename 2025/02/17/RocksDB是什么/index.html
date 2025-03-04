@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、概述1.1 简介RocksDB 是一个持久、内嵌型 K&#x2F;V存储引擎，键和值是任意大小的字节流（没有类型）。它支持point lookup和range scan&#96;，并提供不同类型的 ACID 保证。它是一个 C++ 库。RocksDB 借鉴了开源leveldb项目的重要代码以及Apache HBase的设计理念。初始代码是从开源 leveldb 1.5 fork而来的。它还以 Meta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RocksDB是什么">
+<meta property="og:url" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、概述1.1 简介RocksDB 是一个持久、内嵌型 K&#x2F;V存储引擎，键和值是任意大小的字节流（没有类型）。它支持point lookup和range scan&#96;，并提供不同类型的 ACID 保证。它是一个 C++ 库。RocksDB 借鉴了开源leveldb项目的重要代码以及Apache HBase的设计理念。初始代码是从开源 leveldb 1.5 fork而来的。它还以 Meta">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/LSM-tree.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img1.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img2.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img3.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img4.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img5.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img6.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img7.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/img8.png">
+<meta property="article:published_time" content="2025-02-17T06:19:23.000Z">
+<meta property="article:modified_time" content="2025-02-17T06:19:23.000Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="RocksDB">
+<meta property="article:tag" content="LSM-Tree">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/LSM-tree.png">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/","path":"2025/02/17/RocksDB是什么/","title":"RocksDB是什么"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>RocksDB是什么 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="nav-text">一、概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E7%AE%80%E4%BB%8B"><span class="nav-text">1.1 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E9%AB%98%E5%BA%A6%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-text">1.2 高度分层架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-MemTable"><span class="nav-text">1.2.1 MemTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-WAL"><span class="nav-text">1.2.2 WAL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-SSTable"><span class="nav-text">1.2.3 SSTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-4-%E5%86%99%E8%B7%AF%E5%BE%84"><span class="nav-text">1.2.4 写路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-5-%E8%AF%BB%E8%B7%AF%E5%BE%84"><span class="nav-text">1.2.5 读路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E6%A6%82%E8%BF%B0"><span class="nav-text">1.3 概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E6%97%8F-Column-Families"><span class="nav-text">列族(Column Families)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Updates"><span class="nav-text">Updates</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gets-Iterators-and-Snapshots"><span class="nav-text">Gets,Iterators and Snapshots</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1-transaction"><span class="nav-text">事务(transaction)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E8%BF%AD%E4%BB%A3%E5%99%A8-Prefix-Iterators"><span class="nav-text">前缀迭代器(Prefix Iterators)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7-Persistence"><span class="nav-text">持久性(Persistence)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C"><span class="nav-text">数据校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-Threaded-Compactions"><span class="nav-text">Multi-Threaded Compactions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compaction-Styles"><span class="nav-text">Compaction Styles</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="nav-text">元数据存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Avoiding-Stalls"><span class="nav-text">Avoiding Stalls</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Compaction-Filter"><span class="nav-text">Compaction Filter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E8%AF%BB%E6%A8%A1%E5%BC%8F"><span class="nav-text">只读模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%B0%83%E8%AF%95%E6%97%A5%E5%BF%97"><span class="nav-text">数据库调试日志</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Compression"><span class="nav-text">Data Compression</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%A8%E9%87%8F%E5%A4%87%E4%BB%BD%E4%B8%8E%E5%A4%8D%E5%88%B6"><span class="nav-text">全量备份与复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E5%90%8C%E4%B8%80%E4%B8%AA%E8%BF%9B%E7%A8%8B%E6%89%93%E5%BC%80%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-text">支持同一个进程打开多个数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-Cache"><span class="nav-text">Block Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-Cache"><span class="nav-text">Table Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-Control"><span class="nav-text">I&#x2F;O Control</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StackableDB"><span class="nav-text">StackableDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Merge-Operator"><span class="nav-text">Merge Operator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DB-ID"><span class="nav-text">DB ID</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E5%B7%A5%E5%85%B7"><span class="nav-text">1.4 工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-LevelDB-%E6%89%80%E6%B2%A1%E6%9C%89%E7%9A%84%E7%89%B9%E6%80%A7"><span class="nav-text">1.5 LevelDB 所没有的特性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JiaLong-Kang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kjialong@163.com" title="E-Mail → mailto:kjialong@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://coolshell.cn/" title="https:&#x2F;&#x2F;coolshell.cn" rel="noopener" target="_blank">左耳朵耗子</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="RocksDB是什么 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          RocksDB是什么
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-02-17 14:19:23" itemprop="dateCreated datePublished" datetime="2025-02-17T14:19:23+08:00">2025-02-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/RocksDB/" itemprop="url" rel="index"><span itemprop="name">RocksDB</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>6.9k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>1:09</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h1><h2 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h2><p>RocksDB 是一个持久<code>、内嵌型 K/V存储引擎，键和值是任意大小的字节流（没有类型）。它支持</code>point lookup<code>和</code>range scan&#96;，并提供不同类型的 ACID 保证。它是一个 C++ 库。RocksDB 借鉴了开源<a target="_blank" rel="noopener" href="https://code.google.com/p/leveldb/">leveldb</a>项目的重要代码以及<a target="_blank" rel="noopener" href="http://hbase.apache.org/">Apache HBase</a>的设计理念。初始代码是从开源 leveldb 1.5 fork而来的。它还以 Meta 在 RocksDB 之前开发的代码和理念为基础。</p>
+<p>RocksDB 具有高度灵活的设置，可以根据不同的生产环境进行调优，包括 SSD、硬盘、ramfs 或远程存储。它支持多种压缩算法，并提供了良好的生产支持和调试工具。另一方面，RocksDB 也努力限制可调参数的数量，提供足够好的开箱即用性能，并在适用的地方使用一些自适应算法。</p>
+<span id="more"></span>
+
+<p>“内嵌” 意味着：</p>
+<ul>
+<li>该数据库没有独立进程，而是被集成进应用中，和应用共享内存等资源，从而避免了跨进程通信的开销。</li>
+<li>它没有内置服务器，无法通过网络进行远程访问。</li>
+<li>它不是分布式的，这意味着它不提供容错性、冗余或分片（sharding）机制。</li>
+</ul>
+<p>如有必要，需依赖于应用层来实现上述功能。</p>
+<p>RocksDB 提供了很少的几个用于修改 kv 集合的函数底层接口：</p>
+<ul>
+<li><code>put(key, value)</code>：插入新的键值对或更新已有键值对</li>
+<li><code>merge(key, value)</code>：将新值与给定键的原值进行合并</li>
+<li><code>delete(key)</code>：从集合中删除键值对</li>
+</ul>
+<p>获取指定 key 所关联的 value：</p>
+<ul>
+<li><code>get(key)</code></li>
+</ul>
+<p>通过迭代器可以进行范围扫描 —— 找到特定的 key，并按顺序访问该 key 后续的键值对：</p>
+<ul>
+<li><code>iterator.seek(key_prefix); iterator.value(); iterator.next()</code></li>
+</ul>
+<h2 id="1-2-高度分层架构"><a href="#1-2-高度分层架构" class="headerlink" title="1.2 高度分层架构"></a>1.2 高度分层架构</h2><img src="LSM-tree.png"  >
+
+<p>RocksDB 的核心数据结构被称为<strong>日志结构合并树</strong> （LSM-Tree）。它是一种树形的数据结构，由多个层级组成，每层的数据按 key 有序。LSM-Tree 主要设计用来应对写入密集型工作负载，并于 1996 年在同名论文 <a target="_blank" rel="noopener" href="http://paperhub.s3.amazonaws.com/18e91eb4db2114a06ea614f0384f2784.pdf">The Log-Structured Merge-Tree (LSM-Tree)</a> 被大家所知，其核心思想是充分利用了磁盘批量的顺序IO要远比随机IO性能好。</p>
+<p>LSM-Tree 的最高层保存在内存中，包含最近写入的数据。其他较低层级的数据存储在磁盘上，层数编号从 0 到 N 。第 0 层 L0 存储从内存移动到磁盘上的数据，第 1 层及以下层级则存储更老的数据。<strong>通常某层的下个层级在数据量上会比该层大一个数量级，当某层数据量变得过大时，会合并到下一层</strong>。</p>
+<h3 id="1-2-1-MemTable"><a href="#1-2-1-MemTable" class="headerlink" title="1.2.1 MemTable"></a>1.2.1 MemTable</h3><p><code>MemTable</code>是一个内存数据结构，在键值对写入磁盘之前，<code>Memtable</code> 会缓存住这些键值对。所有插入和更新操作都会过 MemTable。当然也包括删除操作：不过，在 RocksDB 中，并不会直接原地修改键值对，而是通过插入墓碑记录（tombstone ）来进行标记删除。</p>
+<p><code>MemTable</code> 具有可配置的字节数限制。当一个 <code>MemTable</code> 变满时，就会切到一个新的<code> MemTable</code>。同时原 <code>MemTable</code> 变为不可修改状态，由后台线程把内容flush到一个SST文件，然后将该<code>MemTable</code>销毁。</p>
+<p>例如现在向数据库中插入key</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">db.put(&quot;chipmunk&quot;, &quot;1&quot;)</span><br><span class="line">db.put(&quot;cat&quot;, &quot;2&quot;)</span><br><span class="line">db.put(&quot;raccoon&quot;, &quot;3&quot;)</span><br><span class="line">db.put(&quot;dog&quot;, &quot;4&quot;)</span><br></pre></td></tr></table></figure>
+
+<img src="img1.png"  >
+
+<p>如上图所示，<code>MemTable</code> 中的键值对是按 key 有序排列的。尽管 <code>chipmunk</code> 是最先插入的，但由于 MemTable 是按 key 有序的，因此 <code>chipmunk</code> 排在 <code>cat</code> 之后。这种排序对于范围扫描是必须的。</p>
+<p>影响memtable的最重要的几个选项是：</p>
+<ul>
+<li>memtable_factory: memtable对象的工厂。通过声明一个工厂对象，用户可以改变底层memtable的实现，并提供事先声明的选项。</li>
+<li>write_buffer_size：一个memtable的大小</li>
+<li>db_write_buffer_size：多个列族的memtable的大小总和。这可以用来管理memtable使用的总内存数。</li>
+<li>write_buffer_manager：除了声明memtable的总大小，用户还可以提供他们自己的写缓冲区管理器，用来控制总体的memtable使用量。这个选项会覆盖db_write_buffer_size</li>
+<li>max_write_buffer_number：内存中可以拥有刷盘到SST文件前的最大memtable数。</li>
+</ul>
+<p>默认的<code>MemTable</code>实现是基于<code>skiplist</code>。用户也可以使用其他<code>MemTable</code>实现，例如<code>HashLinkList</code>，<code>HashSkipList</code>或者<code>Vector</code>，以满足不同场景需求。</p>
+<table>
+<thead>
+<tr>
+<th>MEMTABLE类型</th>
+<th>SKIPLIST</th>
+<th>HASHSKIPLIST</th>
+<th>HASHLINKLIST</th>
+<th>VECTOR</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最佳使用场景</td>
+<td>通用</td>
+<td>带特殊key前缀的范围查询</td>
+<td>带特殊key前缀，并且每个前缀都只有很小数量的行</td>
+<td>大量随机写压力</td>
+</tr>
+<tr>
+<td>索引类型</td>
+<td>二分搜索</td>
+<td>哈希+二分搜索</td>
+<td>哈希+线性搜索</td>
+<td>线性搜索</td>
+</tr>
+<tr>
+<td>是否支持全量db有序扫描</td>
+<td>天然支持</td>
+<td>非常耗费资源（拷贝以及排序一生成一个临时视图</td>
+<td>同HashSkipList</td>
+<td>同HashSkipList</td>
+</tr>
+<tr>
+<td>额外内存</td>
+<td>平均（每个节点有多个指针</td>
+<td>高（哈希桶+非空桶的skiplist元数据+每个节点多个指针</td>
+<td>稍低（哈希桶+每个节点的指针</td>
+<td>低（vector尾部预分配的内存）</td>
+</tr>
+<tr>
+<td>Memtable落盘</td>
+<td>快速，以及固定数量的额外内存</td>
+<td>慢，并且大量临时内存使用</td>
+<td>同HashSkipList</td>
+<td>同HashSkipList</td>
+</tr>
+<tr>
+<td>并发插入</td>
+<td>支持</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>带Hint插入</td>
+<td>支持（在没有并发插入的时候</td>
+<td>不支持</td>
+<td>不支持</td>
+<td>不支持</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-2-WAL"><a href="#1-2-2-WAL" class="headerlink" title="1.2.2 WAL"></a>1.2.2 WAL</h3><p>当进程崩溃或机器异常时，其内存数据都会丢失。为了防止数据丢失，保证数据的持久化，RocksDB 会将所有更新写入到磁盘上的预写日志（WAL，write-ahead log）中。当发生异常时，RocksDB可以回放日志，恢复数据。</p>
+<p>WAL 是一个只允许追加的文件，包含一组更改记录序列。每个记录包含键值对、记录类型（Put &#x2F; Merge &#x2F; Delete）和校验和（checksum，可选）。与 MemTable 不同，在 WAL 中，记录不按 key 有序，而是按照请求到来的顺序被追加到 WAL 中。</p>
+<img src="img2.png"  >
+
+<h3 id="1-2-3-SSTable"><a href="#1-2-3-SSTable" class="headerlink" title="1.2.3 SSTable"></a>1.2.3 SSTable</h3><p>SSTable (Sorted String Table) 是一种持久化，有序且不可变的的键值存储结构。为了管理，RocksDB会将一个SST文件切分为若干个固定大小的block，每个block都有一个校验和用于检测数据是否损坏。每次从磁盘读取数据时，RocksDB 都会使用这些校验和进行校验。为了节省磁盘空间，RocksDB 提供了多种压缩算法，以平衡性能和压缩率。例如：Zlib、BZ2、Snappy（默认）、LZ4 或 ZSTD 算法。</p>
+<p>尽管 SST 中的 kv 对是有序的，我们也并非总能进行二分查找，尤其是数据块在压缩过后，会使得查找很低效。RocksDB 使用索引来优化查询，索引存储在紧邻数据块之后。索引块会存储每个 block 中最后一个 key与该key在SST文件中偏移量的映射关系，并且索引块中 key 也是有序的，因此我们可以通过二分搜索快速找到某个 key。</p>
+<img src="img3.png"  >
+
+<p>例如，我们在查找 <code>lynx</code>，索引会告诉我们这个键值对可能在 block 2，因为按照字典序，<code>lynx</code> 在 <code>chipmunk</code> 之后，但在 <code>raccoon</code> 之前。但其实 SST 文件中并没有 <code>lynx</code>，但我们仍然需要从磁盘加载 block 以进行搜索。RocksDB 支持启用<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Bloom_filter">布隆过滤器</a>，一种具有高效空间利用率的概率性数据结构，可以用来检测某个元素是否在集合中。布隆过滤器保存在 SST 文件中过滤器部分，以便能够快速确定某个 key 不在 SST 中，减少无效磁盘访问，极大提升了查询速度。</p>
+<p><strong>Flush</strong></p>
+<p>RocksDB 使用一个专门的后台线程定期地把不可变的<code>MemTable</code>从内存持久化到磁盘。一旦刷盘（flush）完成，不可变的<code>MemTable</code> 和相应的 <code>WAL</code> 就会被丢弃。RocksDB 开始写入新的<code> WAL</code>、<code>MemTable</code>。每次刷盘都会在 L0 层上产生一个新的 <code>SST 文件</code>。该文件一旦写入磁盘后，就不再会修改。</p>
+<p>RocksDB 的 MemTable 的默认基于<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Skip_list">跳表</a>实现。该数据结构是一个具有额外采样层的链表，从而允许快速、有序地查询和插入数据。有序性使得 <code>MemTable</code> 刷盘时更高效，因为可以直接按顺序迭代键值对顺序写入磁盘。<strong>将随机写变为顺序写是 LSM-Tree 的核心设计之一</strong>。</p>
+<img src="img4.png"  >
+
+
+
+<p><strong>Compaction</strong></p>
+<p>当低level的SST文件数量或者大小达到阈值时，会进行Compaction。之所以进行Compaction是因为如果所有SST文件位于L0层会有空间放大（space amplifications）和读放大（read amplifications）的问题。</p>
+<p>空间放大是存储数据所用实际空间与逻辑上数据大小的比值。假设一个数据库需要 2 MB 磁盘空间来存储逻辑上的 1 MB 大小的键值对是，那么它的空间放大率是 2。类似地，读放大用来衡量用户执行一次逻辑上的读操作，系统内所需进行的实际 IO 次数。</p>
+<p>现在，让我们向数据库添加更多 key 并删除当中的一些 key：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.delete(&quot;chipmunk&quot;)</span><br><span class="line">db.put(&quot;cat&quot;, &quot;5&quot;)</span><br><span class="line">db.put(&quot;raccoon&quot;, &quot;6&quot;)</span><br><span class="line">db.put(&quot;zebra&quot;, &quot;7&quot;)</span><br><span class="line">// Flush triggers</span><br><span class="line">db.delete(&quot;raccoon&quot;)</span><br><span class="line">db.put(&quot;cat&quot;, &quot;8&quot;)</span><br><span class="line">db.put(&quot;zebra&quot;, &quot;9&quot;)</span><br><span class="line">db.put(&quot;duck&quot;, &quot;10&quot;)</span><br></pre></td></tr></table></figure>
+
+<img src="img5.png"  >
+
+<p>随着我们的不断写入，<code>MemTable </code>不断被刷到磁盘，L0 上的<code> SST 文件</code>数量也在增长：</p>
+<ul>
+<li>删除或更新 key 所占用的空间永远不会被回收。例如，<code>cat</code> 这个 key 的三次更新记录分别在 SST1，SST2 和 SST3 中，而 <code>chipmunk</code> 在 SST1 中有一次更新记录，在 SST2 中有一次删除记录，这些无用的记录仍然占用额外磁盘空间。</li>
+<li>随着 L0 上 SST 文件数量的增加，读取变得越来越慢。每次查找都要逐个检查所有 SST 文件。</li>
+</ul>
+<p>RocksDB 引入了Compaction 机制，可以降低空间放大和读放大，但代价是更高的写放大。Compaction 会将某层的 SST 文件同下一层的 SST 文件合并，并在这个过程中丢弃已删除和被覆盖的无效 key。Compaction 会在后台专用的线程池中运行，从而保证了 RocksDB 可以在做 Compaction 时能够正常处理用户的读写请求。</p>
+<img src="img6.png"  >
+
+<p><code>Level Style Compaction</code>是 RocksDB 中的默认 Compaction 策略。使用<code> Level Style Compaction</code>，L0 层中的不同<code>SST 文件</code>键范围会重叠。L1 层及以下层会被组织为包含多个 <code>SST 文件</code>的序列，并保证同层级内的所有 SST 在键范围上没有交叠，且 <code>SST 文件</code>之间有序。Compaction 时，会选择性地将某层的<code> SST 文件</code>与下一层的 key 范围有重叠 <code>SST 文件</code>进行合并。</p>
+<p>举例来说，如下图所示，在 L0 到 L1 层进行 Compaction 时，如果 L0 上的输入文件覆盖整个键范围，此时就需要对所有 L0 和 L1 层的文件进行 Compaction。</p>
+<img src="img7.png"  >
+
+<p>而像是下面的这种 L1 和 L2 层的 Compaction，L1 层的输入文件只与 L2 层的两个 SST 文件重叠，因此，只需要对部分文件进行 Compaction 即可。</p>
+<img src="img8.png"  >
+
+<p>当 L0 层上的 SST 文件数量达到一定阈值（默认为 4）时，将触发 Compaction。对于 L1 层及以下层级，当整个层级的 SST 文件总大小超过配置的目标大小时，会触发 Compaction 。当这种情况发生时，可能会触发 L1 到 L2 层的 Compaction。从而，从 L0 到 L1 层的 Compaction 可能会引发一直到最底层级联 Compaction。在 Compaction 完成之后，RocksDB 会更新元数据并从磁盘中删除已经被 Compcated 过的文件。</p>
+<p><em>注：RocksDB 提供了不同 Compaction 策略来在空间、读放大和写放大之间进行权衡</em>。</p>
+<h3 id="1-2-4-写路径"><a href="#1-2-4-写路径" class="headerlink" title="1.2.4 写路径"></a>1.2.4 写路径</h3><p>1，(可选) 当收到一个写请求时，会先把该条数据append方式写到WAL文件，用作故障恢复。</p>
+<p>2，当写完WAL后，会把该条数据写入内存的MemTable，随即返回写成功。</p>
+<p>3，当Memtable超过一定的大小后，会在内存里面冻结，变成不可变的MemTable，同时为了不阻塞写操作生成一个新MemTable。</p>
+<p>4，有后台线程把内存里不可变的Memtable给flush到磁盘，生成L0 SST文件。</p>
+<p>5，从 L0 到 L1 层的 Compaction 可能会引发一直到最底层级联 Compaction。在 Compaction 完成之后，RocksDB 会更新元数据并从磁盘中删除已经被 Compcated 过的SST文件。</p>
+<h3 id="1-2-5-读路径"><a href="#1-2-5-读路径" class="headerlink" title="1.2.5 读路径"></a>1.2.5 读路径</h3><ol>
+<li>检索 MemTable。</li>
+<li>检索所有不可变 MemTable。</li>
+<li>搜索最近 flush 过的 L0 层中的所有 SST 文件。</li>
+<li>对于 L1 层及以下层级，首先找到可能包含该 key 的单个 SST 文件，然后在文件内进行搜索。</li>
+</ol>
+<p>搜索 SST 文件涉及：</p>
+<ol>
+<li>（可选）探测布隆过滤器。</li>
+<li>查找 index 来找到可能包含这个 key 的 block 所在位置。</li>
+<li>读取 block 文件并尝试在其中找到 key。</li>
+</ol>
+<h2 id="1-3-概述"><a href="#1-3-概述" class="headerlink" title="1.3 概述"></a>1.3 概述</h2><h3 id="列族-Column-Families"><a href="#列族-Column-Families" class="headerlink" title="列族(Column Families)"></a>列族(Column Families)</h3><p>RocksDB支持将一个数据库实例按照许多列族进行分片。所有数据库创建的时候都会有一个用”default”命名的列族，如果某个操作不指定列族，他将操作这个default列族。<strong>不同的列族共享WAL，独享SST和MemTable，所以Column Family起到了一定的逻辑和资源隔离的作用</strong>。</p>
+<p>RocksDB在开启WAL的时候保证即使crash，列族的数据也能保持一致性。它还通过 API 支持跨列族的原子操作<code>WriteBatch</code>。</p>
+<h3 id="Updates"><a href="#Updates" class="headerlink" title="Updates"></a>Updates</h3><p>API<code>Put</code>将单个键值插入数据库。如果数据库中已存在该键，则将覆盖先前的值。API<code>Write</code>允许在数据库中原子地插入、更新或删除多个键值。数据库保证一次<code>Write</code>调用中的所有键值都将插入数据库，或者一个键值也不会插入数据库。如果数据库中已存在任何这些键，则将覆盖先前的值。API<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/DeleteRange"><code>DeleteRange</code></a>可用于删除某个范围内的所有键。</p>
+<h3 id="Gets-Iterators-and-Snapshots"><a href="#Gets-Iterators-and-Snapshots" class="headerlink" title="Gets,Iterators and Snapshots"></a>Gets,Iterators and Snapshots</h3><p>键和值被视为纯字节流。键或值的大小没有限制。<code>Get</code>API 允许应用程序从数据库中提取单个键值。<code>MultiGet</code>API 允许应用程序从数据库检索一组键。使用<code>MultiGet</code>获取的多个键值对将保证在同一时间点的一致性。</p>
+<p>数据库中的所有数据都按逻辑顺序排列。应用程序可以定义一种键比较方法，用来指定键的排序规则。<code>Iterator</code> API允许对数据库做range scan 。<code>Iterator</code>可以查找指定的键，然后可以从该点开始一次扫描一个键。。Iterator API还可以用于对数据库中的键进行反向迭代。<strong>在创建<code>Iterator</code>时会创建数据库的一致时间点视图，因此，通过Iterator返回的所有键都来自数据库的一致视图。</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Snapshot"><code>Snapshot</code></a>API允许应用程序创建数据库的时间点视图。<code>Get</code>和<code>Iterator</code>API 可用于从指定的snapshot读取数据。<code>Snapshot</code>和 <code>Iterator</code>都提供了数据库的时间点视图，但它们的实现不同。<strong>短期&#x2F;前台扫描最好通过迭代器完成，而长时间&#x2F;后台扫描最好通过快照完成</strong>。 <code>Iterator</code>会对整个指定时间点的数据库相关文件保留一个引用计数，这些文件在iterator释放前，都不会被删除。另一方面，snapshot不会阻止文件删除；相反，compaction过程知道snapshot存在，并承诺永远不会删除在任何现有快照中可见的key。</p>
+<p><code>Snapshot</code>在数据库重启后不会保留：reload RocksDB库会释放所有之前创建好的snapshot。</p>
+<h3 id="事务-transaction"><a href="#事务-transaction" class="headerlink" title="事务(transaction)"></a>事务(transaction)</h3><p>RocksDB支持多操作事务。它支持乐观模式和悲观模式。参考 <a target="_blank" rel="noopener" href="https://github.com/johnzeng/rocksdb-doc-cn/blob/master/doc">事务</a>。</p>
+<h3 id="前缀迭代器-Prefix-Iterators"><a href="#前缀迭代器-Prefix-Iterators" class="headerlink" title="前缀迭代器(Prefix Iterators)"></a>前缀迭代器(Prefix Iterators)</h3><p>大多数 LSM-tree 引擎无法支持高效的range scan  API，因为它需要查看多个数据文件。但是，大多数应用程序不会对数据库中的键进行纯随机范围扫描；相反，应用程序通常只扫描指定前缀的键。RocksDB 利用了这一点。应用程序可以配置<code>Options.prefix_extractor</code>以启用基于键前缀的过滤。启用后，会将前缀的hash添加到布隆过滤器（Bloom Filter）中。指定了键前缀的<code>Iterator</code>(在ReadOptions中)将使用<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/RocksDB-Bloom-Filter">布隆过滤器</a>来避免查找不包含指定键前缀的数据文件。参阅<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Prefix-Seek">前缀查找</a>。</p>
+<h3 id="持久性-Persistence"><a href="#持久性-Persistence" class="headerlink" title="持久性(Persistence)"></a>持久性(Persistence)</h3><p>RocksDB 有一个<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Write-Ahead-Log-(WAL)">预写日志 (WAL)</a>。所有写入操作（<code>Put</code>、<code>Delete</code>和<code>Merge</code>）都存储在名为 memtable 的内存缓冲区中，也可以选择性地写入 WAL。重新启动时，它会重新处理日志中记录的所有事务。</p>
+<p>WAL 可以配置为存储在与 <strong>SST 文件</strong> 不同的目录中。这对于您可能希望将所有数据文件存储在非持久性快速存储中的情况是必要的。同时，您可以通过将所有事务日志放在较慢但持久的存储上来确保不会丢失数据。</p>
+<p>每次<code>Put</code>都有一个标志位，通过WriteOptions来设置，允许指定这个Put操作是不是需要写事务日志。WriteOptions同时允许指定在<code>Put</code>返回成功前，是不是需要调用<code>fsync</code>。</p>
+<p>在内部，RocksDB 使用批量提交机制将事务批量放入日志中，以便它可以使用单个<code>fsync</code>调用提交多个事务。</p>
+<h3 id="数据校验"><a href="#数据校验" class="headerlink" title="数据校验"></a>数据校验</h3><p>RocksDB 使用校验和来检测存储中的损坏。每个 <strong>SST 文件块</strong>（通常大小在 <strong>4KB 到 128KB</strong> 之间）都会有一个单独的校验和。块一旦写入存储，就不再做修改。RocksDB 还维护完整的文件校验和（请参阅<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Full-File-Checksum-and-Checksum-Handoff">完整文件校验和和校验和切换</a>）以及可选的<a target="_blank" rel="noopener" href="http://rocksdb.org/blog/2022/07/18/per-key-value-checksum.html">每个键值校验和</a>。</p>
+<p>RocksDB 动态检测并利用 CPU 校验和卸载支持。</p>
+<h3 id="Multi-Threaded-Compactions"><a href="#Multi-Threaded-Compactions" class="headerlink" title="Multi-Threaded Compactions"></a>Multi-Threaded Compactions</h3><p>在存在持续写入的情况下，需要进行compactions以提高空间效率、读取（查询）效率和及时删除数据。Compaction会删除已删除或覆盖的键值，并重新组织数据以提高查询效率。如果配置的话，Compactions 可能会在多个线程中同时进行。</p>
+<p>整个数据库存储在一组<strong>SST文件</strong>中。当<strong>memtable</strong>写满时，其内容将写入 LSM-tree的 Level-0 (L0) 文件中。RocksDB 在将<strong>memtable</strong> 刷新到 L0 文件中时，会删除重复和覆盖的键。在compaction中，一些文件会定期读入并合并以形成更大的文件，通常会进入下一个 LSM 级别（例如 L1，直到 Lmax）。</p>
+<p>LSM 数据库的整体写入吞吐量直接取决于compaction发生的速度，尤其是当数据存储在 SSD 或 RAM 等快速存储中时。RocksDB 可以配置为从多个线程发出并发compaction请求。据观察，当数据库位于 SSD 上时，与单线程compaction相比，多线程compaction可以将持续写入速率提高10倍。</p>
+<h3 id="Compaction-Styles"><a href="#Compaction-Styles" class="headerlink" title="Compaction Styles"></a><a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Compaction">Compaction Styles</a></h3><p><code>Level Style Compaction</code>和<code>Universal Style Compaction</code>都将数据存储在数据库中固定数量的逻辑级别中。较新的数据存储在级别 0 (L0) 中，较旧的数据存储在编号较高的级别中，最高可达 Lmax。<strong>L0中的文件可能会有重叠的键，但其他级别的文件通常会在每个级别上单独排序</strong>。</p>
+<p><code>Level Style Compaction</code>（默认）通常通过最小化每个Compaction步骤中涉及的文件来优化磁盘占用空间与逻辑数据库大小（空间放大）：将 Ln 中的一个文件与 Ln+1 中的所有重叠文件合并，并用 Ln+1 中的新文件替换它们。</p>
+<p><code>Universal Style Compaction</code>通常通过一次合并多个文件和级别来优化写入磁盘的总字节数与逻辑数据库大小（写入放大），从而需要更多临时空间。与<code>Level Style Compaction</code>相比，<code>Universal Style Compaction</code>通常会导致写放大更低，但空间和读放大更高。</p>
+<p><code>FIFO Style Compaction</code>会删除过时的旧文件，并可用于类似缓存的数据。在FIFO compaction中，所有文件都在L0级。当数据的总大小超过配置的大小（CompactionOptionsFIFO::max_table_files_size）时，我们删除最旧的<code>SST文件</code>。</p>
+<p>我们还允许开发人员开发和测试自定义compaction策略。为此，RocksDB有适当的钩子来关闭内建的compaction算法，然后使用其他API来允许应用使用他们自己的compaction算法。<code>Options.disable_auto_compaction</code>如果设置，则关闭内建的compaction算法。<code>GetLiveFilesMetaData</code> API允许外部组件查看数据库中的每个数据文件，并决定要merge和compaction哪些数据文件。调用<code>CompactFiles</code>以compaction您想要的文件。该<code>DeleteFile</code>API 允许应用程序删除被视为过时的数据文件。</p>
+<h3 id="元数据存储"><a href="#元数据存储" class="headerlink" title="元数据存储"></a>元数据存储</h3><p>清单日志文件用于记录数据库所有状态变化。<code>compaction</code>过程中会在数据库中添加新文件和删除原有文件，并通过将这些操作记录在<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/MANIFEST">MANIFEST</a>中来使这些操作持久化。</p>
+<h3 id="Avoiding-Stalls"><a href="#Avoiding-Stalls" class="headerlink" title="Avoiding Stalls"></a>Avoiding Stalls</h3><p>后台<code>compaction</code>线程还用于将<code>memable</code>的内容flush到存储上的文件中。如果所有后台<code>compaction</code>线程都长时间忙于compaction，突发性的写操作可能很快填满<code>memable</code>，从而阻塞新的写入。可以通过配置 RocksDB 来保留一小组线程，专门用于将<code>memable</code> flush到存储，从而避免这种情况。</p>
+<h3 id="Compaction-Filter"><a href="#Compaction-Filter" class="headerlink" title="Compaction Filter"></a>Compaction Filter</h3><p>某些应用程序可能希望在<code>compaction</code>时处理键，例如根据 TTL 删除过期的键、在后台删除一定范围的键、更新现有键的值。这可以通过应用程序定义的<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Compaction-Filter">Compaction Filter</a>来完成。</p>
+<h3 id="只读模式"><a href="#只读模式" class="headerlink" title="只读模式"></a>只读模式</h3><p>数据库可以以<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Read-only-and-Secondary-instances">只读模式</a>打开，在该模式下，数据库保证应用程序无法修改任何数据。这大大提高了读取性能，因为避免了一些锁机制。</p>
+<h3 id="数据库调试日志"><a href="#数据库调试日志" class="headerlink" title="数据库调试日志"></a>数据库调试日志</h3><p>默认情况下，RocksDB将详细日志写入名为<code>LOG*</code>的文件。这些日志主要用于调试和分析正在运行的系统。用户可以选择不同的日志级别（参见 <code>DBOptions.info_log_level</code>）。日志文件可以配置为按照指定的周期进行滚动。日志接口是可插拔的，用户可以选择使用不同的记录器，参考<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Logger">记录器</a>。</p>
+<h3 id="Data-Compression"><a href="#Data-Compression" class="headerlink" title="Data Compression"></a>Data Compression</h3><p>RocksDB 支持 lz4、zstd、snappy、zlib 和 lz4_hc压缩，以及 Windows 下的 xpress。RocksDB可以为不同level的<code>SST文件</code>配置不同的压缩算法。请参阅<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Compression">压缩</a>。</p>
+<h3 id="全量备份与复制"><a href="#全量备份与复制" class="headerlink" title="全量备份与复制"></a>全量备份与复制</h3><p>RocksDB 提供了<code>BackupEngine</code> API进行备份，可参考<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/How-to-backup-RocksDB">How to backup RocksDB</a>。</p>
+<p>RocksDB 本身不是复制的，但它提供了一些辅助函数，使用户能够在 RocksDB 之上实现自己的复制系统，可参考 <a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Replication-Helpers">Replication Helpers</a>。</p>
+<h3 id="支持同一个进程打开多个数据库"><a href="#支持同一个进程打开多个数据库" class="headerlink" title="支持同一个进程打开多个数据库"></a>支持同一个进程打开多个数据库</h3><p>RocksDB 的一个常见用法是应用程序将数据集划分为逻辑分区或分片。此技术有利于应用程序负载均衡以及快速故障恢复。这意味着单个进程应能同时操作多个RocksDB数据库。这是通过一个名为<code>Env</code>的对象完成的。除此之外，线程池与<code>Env</code>相关联，如果想在多个数据库实例之间共享一个公共线程池（用于后台compaction），那么它应该使用同一个<code>Env</code>对象来打开这些数据库。</p>
+<p>类似地，多个数据库实例可以共享相同的块缓存或速率限制器。</p>
+<h3 id="Block-Cache"><a href="#Block-Cache" class="headerlink" title="Block Cache"></a>Block Cache</h3><p>RocksDB对block使用<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Block-Cache">LRU</a>做读缓存。 block cache分为两个单独的cache：第一个缓存未压缩的block，第二个缓存在内存中压缩的block。如果配置了压缩block缓存，用户可能希望启用direct I&#x2F;O ，以防止在操作系统的页缓存中缓存相同的数据。</p>
+<h3 id="Table-Cache"><a href="#Table-Cache" class="headerlink" title="Table Cache"></a>Table Cache</h3><p>Table Cache是缓存打开的文件描述符的结构。这些文件描述符用于<strong>sstfiles</strong>。应用程序可以指定Table Cache的最大大小，或将 RocksDB 配置为始终保持所有文件打开状态，以提高性能。</p>
+<h3 id="I-O-Control"><a href="#I-O-Control" class="headerlink" title="I&#x2F;O Control"></a>I&#x2F;O Control</h3><p>RocksDB允许用户以不同的方式配置从<code>SST文件</code>或到<code>SST文件</code>的I&#x2F;O。用户可以启用direct I&#x2F;O，以便RocksDB完全控制I&#x2F;O和缓存。另一种方法是利用一些选项允许用户提示应该如何执行I&#x2F;O。他们可以建议RocksDB在读取文件时调用 <code>fadvise</code>，在正在追加数据的文件中定期调用 range sync。有关更多详细信息，请参阅<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/IO">IO</a>。<a target="_blank" rel="noopener" href="https://github.com/johnzeng/rocksdb-doc-cn/blob/master/doc">https://github.com/johnzeng/rocksdb-doc-cn/blob/master/doc</a>)</p>
+<h3 id="StackableDB"><a href="#StackableDB" class="headerlink" title="StackableDB"></a>StackableDB</h3><p>RocksDB 具有内置的包装器机制，可以在数据库核心代码之上添加额外的功能，这些功能通过<code>StackableDB</code>API封装。例如，TTL功能是由<code>StackableDB</code>接口实现的，并不是RocksDB核心API的一部分，这种方法使代码保持模块化和干净。</p>
+<h3 id="Merge-Operator"><a href="#Merge-Operator" class="headerlink" title="Merge Operator"></a>Merge Operator</h3><p>RocksDB 原生支持三种类型的记录，即<code>Put</code>、<code>Delete</code>、<code>Merge</code>记录。当compaction过程遇到<code>Merge</code>时，它会调用应用程序指定的方法，称为合并运算符。合并可以将多个 Put 和 Merge 记录合并为一条记录。这个强大的功能允许通常执行读取-修改-写入的应用程序完全避免读取。它允许应用程序将操作意图记录为<code>Merge</code>记录，而 RocksDB compaction过程会将该意图延迟应用于原始值。此功能在<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Merge-Operator">合并运算符中有详细描述</a></p>
+<h3 id="DB-ID"><a href="#DB-ID" class="headerlink" title="DB ID"></a>DB ID</h3><p>数据库创建时创建的全局唯一ID，默认存储在 DB 文件夹中的 <code>IDENTITY</code>文件中。可选地，它只存储在<code>MANIFEST</code>文件中。建议存储在 <code>MANIFEST </code>文件中。</p>
+<h2 id="1-4-工具"><a href="#1-4-工具" class="headerlink" title="1.4 工具"></a>1.4 工具</h2><p>有许多有趣的工具用于支持生产环境中的数据库。<code>sst_dump</code>程序转储<code>sst文件</code>中的所有键值，以及其他信息。<code>ldb</code>工具可以put, get，s can数据库的内容。<code>ldb</code>还可以转储<code>MANIFEST</code>的内容，它还可以用来修改数据库配置的层级数。有关详细信息，请参阅<a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki/Administration-and-Data-Access-Tool">管理和数据访问工具</a>。</p>
+<h2 id="1-5-LevelDB-所没有的特性"><a href="#1-5-LevelDB-所没有的特性" class="headerlink" title="1.5 LevelDB 所没有的特性"></a>1.5 LevelDB 所没有的特性</h2><p><strong>Performance</strong>：</p>
+<ul>
+<li>Multithread compaction</li>
+<li>Multithread memtable inserts</li>
+<li>Reduced DB mutex holding</li>
+<li>Optimized level-based compaction style and universal compaction style</li>
+<li>Prefix bloom filter</li>
+<li>Memtable bloom filter</li>
+<li>Single bloom filter covering the whole SST file</li>
+<li>Write lock optimization</li>
+<li>Improved Iter::Prev() performance</li>
+<li>Fewer comparator calls during SkipList searches</li>
+<li>Allocate memtable memory using huge page.</li>
+</ul>
+<p><strong>Features</strong>：</p>
+<ul>
+<li>Column Families</li>
+<li>Transactions and WriteBatchWithIndex</li>
+<li>Backup and Checkpoints</li>
+<li>Merge Operators</li>
+<li>Compaction Filters</li>
+<li>RocksDB Java</li>
+<li>Manual Compactions Run in Parallel with Automatic Compactions</li>
+<li>Persistent Cache</li>
+<li>Bulk loading</li>
+<li>Forward Iterators&#x2F; Tailing iterator</li>
+<li>Single delete</li>
+<li>Delete files in range</li>
+<li>Pin iterator key&#x2F;value</li>
+</ul>
+<p><strong>Alternative Data Structures And Formats</strong>：</p>
+<ul>
+<li>Plain Table format for memory-only use cases</li>
+<li>Vector-based and hash-based memtable format</li>
+<li>Clock-based cache (coming soon)</li>
+<li>Pluggable information log</li>
+<li>Annotate transaction log write with blob (for replication)</li>
+</ul>
+<p><strong>Tunability</strong>：</p>
+<ul>
+<li>Rate limiting</li>
+<li>Tunable Slowdown and Stop threshold</li>
+<li>Option to keep all files open</li>
+<li>Option to keep all index and bloom filter blocks in block cache</li>
+<li>Multiple WAL recovery modes</li>
+<li>Fadvise hints for readahead and to avoid caching in OS page cache</li>
+<li>Option to pin indexes and bloom filters of L0 files in memory</li>
+<li>More Compression Types: zlib, lz4, zstd</li>
+<li>Compression Dictionary</li>
+<li>Checksum Type: xxhash</li>
+<li>Different level size multiplier and compression type for each level.</li>
+</ul>
+<p><strong>Manageability</strong>：</p>
+<ul>
+<li>Statistics</li>
+<li>Thread-local profiling</li>
+<li>More commands in command-line tools</li>
+<li>User-defined table properties</li>
+<li>Event listeners</li>
+<li>More DB Properties</li>
+<li>Dynamic option changes</li>
+<li>Get options from a string or map</li>
+<li>Persistent options to option files</li>
+</ul>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://github.com/facebook/rocksdb/wiki">RocksDB Wiki</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.qtmuniao.com/2023/06/05/how-rocksdb-works">RocksDB运行原理</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1441835">深入理解什么是LSM-Tree</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/2025/02/17/RocksDB%E6%98%AF%E4%BB%80%E4%B9%88/" title="RocksDB是什么">https://blog.kjlcloud.com/2025/02/17/RocksDB是什么/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/RocksDB/" rel="tag"># RocksDB</a>
+              <a href="/tags/LSM-Tree/" rel="tag"># LSM-Tree</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/01/05/C-default%E4%B8%8E-delete/" rel="prev" title="C++11 =default与=delete">
+                  <i class="fa fa-angle-left"></i> C++11 =default与=delete
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/02/20/gtest-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/" rel="next" title="gtest 快速入门">
+                  gtest 快速入门 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">135k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">22:33</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="&emsp;编译C程序涉及很多步骤，第1个步骤就是预编译（预处理）阶段，预编译是在源代码编译之前做一些文本性质的操作。包括删除注释、执行预处理指令。为了观察预编译阶段所做的事，环境使用Linux系统下的GCC编译器 程序编译完整步骤可以查看这篇博客：https:&#x2F;&#x2F;blog.csdn.net&#x2F;kjl167&#x2F;article&#x2F;details&#x2F;124157077 一、 预定义符号ANSI C定义了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言 预编译详解">
+<meta property="og:url" content="https://blog.kjlcloud.com/2022/04/17/C%E8%AF%AD%E8%A8%80-%E9%A2%84%E7%BC%96%E8%AF%91%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="&emsp;编译C程序涉及很多步骤，第1个步骤就是预编译（预处理）阶段，预编译是在源代码编译之前做一些文本性质的操作。包括删除注释、执行预处理指令。为了观察预编译阶段所做的事，环境使用Linux系统下的GCC编译器 程序编译完整步骤可以查看这篇博客：https:&#x2F;&#x2F;blog.csdn.net&#x2F;kjl167&#x2F;article&#x2F;details&#x2F;124157077 一、 预定义符号ANSI C定义了">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/5b5cd3c3d20a3303b6be2d30cc77c1b2.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/e3780755682302ec1af02ee6d9e5653d.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/bc6600afb8e95fed8a57e682575b17ac.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/f50092a917e8c9cc29a62b6cec65fa15.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/fa2d9e94d98a88b3c72524ddcee3792d.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/a6e3b80bed7c9d28ad7328f9cda8c7e8.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/2c52ec377d31bc57a51cbfbe99ec89ed.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/0ddb7e6545608f3dccc227cfbda80051.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/942fb48221a1a687d08d7f2f161286ac.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/ce60046f80966f0524740724c7a7976d.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/14cd197b01c8e1db7fe1fd266eb21a7a.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/7d831711220698cb17a9c8e8cc444b2b.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/18f848835079cf4318e2547faf81db4c.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/0bfc9288995bc04a8254e735d49b07f2.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/61c692c2f9992e05db371df029f7376d.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/9fe7acd9bdfba5712b12f84adbbe7618.png#pic_center">
+<meta property="article:published_time" content="2022-04-17T04:50:00.000Z">
+<meta property="article:modified_time" content="2022-04-17T04:50:00.000Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/blog_migrate/5b5cd3c3d20a3303b6be2d30cc77c1b2.png#pic_center">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/2022/04/17/C%E8%AF%AD%E8%A8%80-%E9%A2%84%E7%BC%96%E8%AF%91%E8%AF%A6%E8%A7%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/2022/04/17/C%E8%AF%AD%E8%A8%80-%E9%A2%84%E7%BC%96%E8%AF%91%E8%AF%A6%E8%A7%A3/","path":"2022/04/17/C语言-预编译详解/","title":"C语言 预编译详解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C语言 预编译详解 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">29</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">44</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81-%E9%A2%84%E5%AE%9A%E4%B9%89%E7%AC%A6%E5%8F%B7"><span class="nav-text">一、 预定义符号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-define-%E5%AE%8F%E5%AE%9A%E4%B9%89"><span class="nav-text">二、 #define 宏定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%AE%9A%E4%B9%89%E4%B8%8D%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E5%AE%8F"><span class="nav-text">2.1 定义不带参数的宏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%AE%9A%E4%B9%89%E5%B8%A6%E5%8F%82%E6%95%B0%E5%AE%8F"><span class="nav-text">2.2 定义带参数宏</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-%E5%AE%8F%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-text">2.2.1 宏的一些问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-%E5%B0%8F%E6%8A%80%E5%B7%A7"><span class="nav-text">2.2.2 小技巧</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E5%AE%8F%E7%9A%84%E6%9B%BF%E6%8D%A2%E8%A7%84%E5%88%99"><span class="nav-text">2.3 宏的替换规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-1-%E4%BD%9C%E7%94%A8"><span class="nav-text">2.3.1 # 作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-2-%E4%BD%9C%E7%94%A8"><span class="nav-text">2.3.2 ## 作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-%E5%B8%A6%E5%89%AF%E4%BD%9C%E7%94%A8%E7%9A%84%E5%AE%8F%E5%8F%82%E6%95%B0"><span class="nav-text">2.4 带副作用的宏参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-%E5%AE%8F%E4%B8%8E%E5%87%BD%E6%95%B0%E5%8C%BA%E5%88%AB"><span class="nav-text">2.5 宏与函数区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-%E5%AE%8F%E7%9A%84%E5%91%BD%E5%90%8D%E7%BA%A6%E5%AE%9A"><span class="nav-text">2.6 宏的命名约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-7-define-%E4%B8%8E-typedef%E5%8C%BA%E5%88%AB"><span class="nav-text">2.7 #define 与 typedef区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81-undef"><span class="nav-text">三、 #undef</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9A%E4%B9%89"><span class="nav-text">四、命令行定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81-%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91"><span class="nav-text">五、 条件编译</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-if-emsp-endif"><span class="nav-text">5.1 #if #endif</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-if-emsp-elif-emsp-else-emsp-endif"><span class="nav-text">5.2 #if #elif #else #endif</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-%E6%98%AF%E5%90%A6%E8%A2%AB%E5%AE%9A%E4%B9%89"><span class="nav-text">5.3 是否被定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-%E5%B5%8C%E5%A5%97%E6%8C%87%E4%BB%A4"><span class="nav-text">5.4 嵌套指令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-text">六、 文件包含</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-text">6.1 文件包含两种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-%E5%B5%8C%E5%A5%97%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-text">6.2 嵌套文件包含</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JiaLong-Kang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:kjialong@163.com" title="E-Mail → mailto:kjialong@163.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://coolshell.cn/" title="https:&#x2F;&#x2F;coolshell.cn" rel="noopener" target="_blank">左耳朵耗子</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/2022/04/17/C%E8%AF%AD%E8%A8%80-%E9%A2%84%E7%BC%96%E8%AF%91%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C语言 预编译详解 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C语言 预编译详解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-04-17 12:50:00" itemprop="dateCreated datePublished" datetime="2022-04-17T12:50:00+08:00">2022-04-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-language/" itemprop="url" rel="index"><span itemprop="name">C language</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>37 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><meta name="referrer" content="no-referrer"/> 
+
+<p><strong>&emsp;编译C程序涉及很多步骤，第1个步骤就是预编译（预处理）阶段，预编译是在源代码编译之前做一些文本性质的操作。包括删除注释、执行预处理指令。为了观察预编译阶段所做的事，环境使用Linux系统下的GCC编译器</strong><br> 程序编译完整步骤可以查看这篇博客：<code>https://blog.csdn.net/kjl167/article/details/124157077</code></p>
+<h1 id="一、-预定义符号"><a href="#一、-预定义符号" class="headerlink" title="一、 预定义符号"></a>一、 预定义符号</h1><p>ANSI C定义了一些预定义符号，它们表示不同含义<br><code>__FILE__   :进行编译的源文件名</code><br><code>__LINE__   :文件当前行号</code><br><code>__DATE__   :文件被编译日期</code><br><code>__TIME__   :文件被编译时间</code><br><code>__STDC__   :如果编译器遵循ANSI C 其值为1，否则未定义</code></p>
+<span id="more"></span>
+
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/5b5cd3c3d20a3303b6be2d30cc77c1b2.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="二、-define-宏定义"><a href="#二、-define-宏定义" class="headerlink" title="二、 #define 宏定义"></a>二、 #define 宏定义</h1><p>#define是 C语言 和 C++ 中的一个预处理指令，其中的“#”表示这是一条预处理命令·。凡是以“#”开头的均为预处理命令，“define”为宏定义命令</p>
+<h2 id="2-1-定义不带参数的宏"><a href="#2-1-定义不带参数的宏" class="headerlink" title="2.1 定义不带参数的宏"></a>2.1 定义不带参数的宏</h2><p>用法：<br><code>#define 标识符（宏名） 对应值</code><br>作用：在预编译时，将标识符替换为对应值，对应值可以是任何文本内容<br>例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int_t int   <span class="comment">//对关键字int起了一个别名，注意int_t不是类型,只是会替换为int  </span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> do_forever for(;;) <span class="comment">//用do_forever描述了一个无限for循环</span></span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/e3780755682302ec1af02ee6d9e5653d.png#pic_center" alt="在这里插入图片描述"></p>
+<p>注意：<font color=#FF0000 >不应该在宏定义的尾部加上分号</font></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">例一</span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 10;</span></span><br><span class="line"><span class="type">int</span> x = MAX;   <span class="comment">//预编译后替换为： int x = 10;;  可以发现第二个;表示一条空语句，这种场景不会出错</span></span><br><span class="line"></span><br><span class="line">例二 </span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 10;</span></span><br><span class="line"><span class="type">int</span> y = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>(y &gt;= <span class="number">10</span>)</span><br><span class="line">	x = MAX;     <span class="comment">//预编译后替换为：  x = 10;;   if没有加&#123; &#125;，后面不能跟两条语句,出错</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	x = <span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/bc6600afb8e95fed8a57e682575b17ac.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="2-2-定义带参数宏"><a href="#2-2-定义带参数宏" class="headerlink" title="2.2 定义带参数宏"></a>2.2 定义带参数宏</h2><p>用法：<br><code>#define name(parameter-list) stuff</code><br>作用：在预编译时，将传入参数列表中参数替换到宏体中对应参数执行某些操作<br>name :宏名<br>parameter-list：参数列表<br>stuff:宏体<br><strong>注意：参数列表的左括号必须与name紧邻，如果两者之间有任何空白存在，参数列表和宏体会被当作不带参数的宏中的替换值</strong><br><img src="https://i-blog.csdnimg.cn/blog_migrate/f50092a917e8c9cc29a62b6cec65fa15.png#pic_center" alt="在这里插入图片描述"></p>
+<h3 id="2-2-1-宏的一些问题"><a href="#2-2-1-宏的一些问题" class="headerlink" title="2.2.1 宏的一些问题"></a>2.2.1 宏的一些问题</h3><p>测试1：当传入参数中有表达式<br><img src="https://i-blog.csdnimg.cn/blog_migrate/fa2d9e94d98a88b3c72524ddcee3792d.png#pic_center" alt="在这里插入图片描述"><br>改进：将宏体中参数用小括号包裹起来<br><img src="https://i-blog.csdnimg.cn/blog_migrate/a6e3b80bed7c9d28ad7328f9cda8c7e8.png#pic_center" alt="在这里插入图片描述"></p>
+<p>测试2：当表达式旁边还有其他运算符</p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/2c52ec377d31bc57a51cbfbe99ec89ed.png#pic_center" alt="在这里插入图片描述"><br>改进：将宏体用小括号包裹起来<br><img src="https://i-blog.csdnimg.cn/blog_migrate/0ddb7e6545608f3dccc227cfbda80051.png#pic_center" alt="在这里插入图片描述"><br><strong>结论：所以用于对数值表达式进行求值的宏定义都应该用这种方式加上括号，避免在使用宏时由于参数中<br>的运算符或邻近运算符之间因为运算符优先级不同产生不可预料的相互作用。</strong></p>
+<h3 id="2-2-2-小技巧"><a href="#2-2-2-小技巧" class="headerlink" title="2.2.2 小技巧"></a>2.2.2 小技巧</h3><p>C语言支持：<strong>相邻字符串常量自动连接成一个字符串</strong><br>例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello &quot;</span><span class="string">&quot;World\n&quot;</span>); <span class="comment">//等同于printf(&quot;Hello World\n&quot;); </span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello World\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello World</span><br><span class="line">Hello World</span><br></pre></td></tr></table></figure>
+<p><strong>我们可以将字符串常量作为宏参数，打印指定数据类型值</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(FORMAT,VALUE) printf(<span class="string">&quot;The value is &quot;</span> FORMAT <span class="string">&quot;\n&quot;</span>,VALUE)</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	PRINT(<span class="string">&quot;%d&quot;</span>, <span class="number">10</span>); <span class="comment">// 即 printf(&quot;The value is &quot; &quot;%d&quot; &quot;\n&quot;,10);</span></span><br><span class="line">	PRINT(<span class="string">&quot;%lf&quot;</span>, <span class="number">5.55</span>); <span class="comment">//即 printf(&quot;The value is &quot; &quot;%lf&quot; &quot;\n&quot;,5.55);</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The value is <span class="number">10</span></span><br><span class="line">The value is <span class="number">5.550000</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-3-宏的替换规则"><a href="#2-3-宏的替换规则" class="headerlink" title="2.3 宏的替换规则"></a>2.3 宏的替换规则</h2><p>在程序中使用宏时，需要涉及几个步骤。</p>
+<ol>
+<li>在调用宏时，首先对参数进行检查，看看是否包含任何由#define定义。如果是，它们首先被替换。</li>
+<li>替换文本随后被插入到程序中原来文本的位置。对于宏，参数名被他们的值所替换。</li>
+<li>最后，再次对结果文件进行扫描，看看它是否包含任何由#define定义的符号。如果是，就重复上述处理过程。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DOUBLE(X) ((X) + (X))</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    调用宏首先对参数检查，由于参数MAX是#define定义，所以被替换即：  int n = DOUBLE(100);</span></span><br><span class="line"><span class="comment">    再将DOUBLE(100)替换即:  int n = ((100) + (100));</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">    <span class="type">int</span> n = DOUBLE(MAX); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li>宏参数和#define 定义中可以包含其他#define定义的宏。但是宏不能出现递归。</li>
+<li>当预处理器搜索#define定义的宏时候，字符串常量的内容并不被搜索。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NUM 100</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(X) ((X) &gt; NUM ? (X):NUM)  <span class="comment">//宏中可以包含其他宏，但是不能包含本身 </span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> n = MAX(<span class="number">10</span>);  <span class="comment">//替换为： int n = ((10) &gt; 100 ? (10):100);</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;NUM = %d\n&quot;</span>,NUM); <span class="comment">//替换为： printf(&quot;NUM = %d\n&quot;,100);   字符串中NUM没有被替换</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-3-1-作用"><a href="#2-3-1-作用" class="headerlink" title="2.3.1 # 作用"></a>2.3.1 # 作用</h3><p><code># :在宏中，#可以将宏参数名（不是参数值）转换为一个字符串 </code><br>#x  替换为： “x”<br>#y 替换为： “y”</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(FORMAT,VALUE) printf(<span class="string">&quot;The value of &quot;</span> #VALUE  <span class="string">&quot; is &quot;</span> FORMAT <span class="string">&quot;\n&quot;</span>,VALUE)</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line">	<span class="type">double</span> d = <span class="number">1.23</span>;</span><br><span class="line">	PRINT(<span class="string">&quot;%d&quot;</span>, x); <span class="comment">// 即预编译替换为 printf(&quot;The value of “ &quot;x“ &quot; is &quot; &quot;%d&quot; &quot;\n&quot;,x); </span></span><br><span class="line">	PRINT(<span class="string">&quot;%lf&quot;</span>, d); <span class="comment">//即预编译替换为 printf(&quot;The value of &quot; “d” &quot; is &quot; &quot;%lf&quot; &quot;\n&quot;,d);</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The value of x is <span class="number">10</span></span><br><span class="line">The value of d is <span class="number">1.230000</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-3-2-作用"><a href="#2-3-2-作用" class="headerlink" title="2.3.2 ## 作用"></a>2.3.2 ## 作用</h3><p><code>## ：在宏中， ##可以把自己两边的符号连接成一个符号</code><br>p##f  替换为: pf</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> JOIN(X,Y) X##Y</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> result = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> i = JOIN(re,sult); <span class="comment">// JOIN(re,sult) -&gt; re##sult 即 int i = result; </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,i); </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">10</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-4-带副作用的宏参数"><a href="#2-4-带副作用的宏参数" class="headerlink" title="2.4 带副作用的宏参数"></a>2.4 带副作用的宏参数</h2><p>当宏参数在宏的定义中出现超过一次的时候，如果参数带有副作用，那么你在使用这个宏的时候就可能出现危险，导致不可预测的后果。副作用就是表达式求值的时候出现的永久性效果</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x+<span class="number">1</span> <span class="comment">//不带副作用</span></span><br><span class="line">x++ <span class="comment">//具有副作用，增加了x的值，当这个表达式下次执行时，产生一个不同的结果</span></span><br></pre></td></tr></table></figure>
+<p>MAX宏可以证明具有副作用的参数所引起的问题，观察下面代码，你认为它将打印什么</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(X,Y) ((X) &gt; (Y) ? (X) : (Y)) </span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">        <span class="type">int</span> y = <span class="number">8</span>;</span><br><span class="line">        <span class="type">int</span> z = MAX(x++,y++);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;x=%d y=%d z=%d\n&quot;</span>,x,y,z);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x=<span class="number">6</span> y=<span class="number">10</span> z=<span class="number">9</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">说明：  MAX(x++,y++) 预编译替换为： ((x++) &gt; (y++) &gt; (x++) : (y++)) , x++和y++都是后缀++所以先比较后++,</span><br><span class="line">所以x=<span class="number">5</span> y=<span class="number">8</span> 条件表达式为假(比较后x=<span class="number">6</span>,y=<span class="number">9</span>)，执行y++,由于是后置++所以先返回<span class="number">9</span>，然后y=<span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5-宏与函数区别"><a href="#2-5-宏与函数区别" class="headerlink" title="2.5 宏与函数区别"></a>2.5 宏与函数区别</h2><p>宏常用于执行简单的计算，比如在两个表达式（数）中寻找其中较大（较小）一个</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(X,Y) ((X) &gt; (Y) ? (X) : (Y)) </span></span><br></pre></td></tr></table></figure>
+<p>相较于函数完成这个功能，宏有2个优势：</p>
+<ol>
+<li>用于调用函数和从函数返回的代码可能比实际执行这个小型计算工作所需要的时间更多。所以宏比函数在程序的规模和速度方面更胜一筹</li>
+<li>更为重要的是函数的参数必须声明为特定的类型。所以函数只能在类型合适的表达式上使用。反之这个宏怎可以适用于整形、长整型、浮点型以及其他任何可以用&gt;运算符来比较的类型，<strong>即宏是类型无关的</strong></li>
+</ol>
+<p><strong>有些任务函数不能完成，函数参数无法是类型，而宏的参数可以出现类型</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MALLOC(n,type) ((type *)malloc((n) * sizeof(type)))  </span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> * p = MALLOC(<span class="number">25</span>,<span class="type">int</span>);  <span class="comment">// 替换为 int * p = ((int *)malloc((25) * sizeof(int)));  </span></span><br><span class="line"><span class="type">char</span> * p = MALLOC(<span class="number">10</span>,<span class="type">char</span>);  <span class="comment">// 替换为 char * p = ((char *)malloc((25) * sizeof(char)));  </span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/942fb48221a1a687d08d7f2f161286ac.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="2-6-宏的命名约定"><a href="#2-6-宏的命名约定" class="headerlink" title="2.6 宏的命名约定"></a>2.6 宏的命名约定</h2><p>#define宏的行为和函数相比存在一些不同的地方，上文做了总结。由于这些不同之处，因此让程序员知道一个标识符究竟是宏还是一个函数非常重要。不幸的是，使用函数或宏的语法是完全一样的，所以语法本身并不能帮助你区分这两者</p>
+<p><code>一个常见的约定是把宏名字全部大写</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> MAX(X,Y) ((X) &gt; (Y) ? (X) : (Y)) </span></span><br><span class="line"></span><br><span class="line">value = MAX(a,b); <span class="comment">//命名约定可以使MAX身份一清二楚</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-7-define-与-typedef区别"><a href="#2-7-define-与-typedef区别" class="headerlink" title="2.7 #define 与 typedef区别"></a>2.7 #define 与 typedef区别</h2><p><code>C语言支持用typedef关键字对各种数据类型定义新名字</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> <span class="type">int_t</span>;  <span class="comment">//int_t是一个类型</span></span><br><span class="line"><span class="type">int_t</span> i = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<p>有的人喜欢使用#define方式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int_t int  <span class="comment">//这里int_t只是符号，不是类型，在预编译后会被替换</span></span></span><br><span class="line"><span class="type">int_t</span> i = <span class="number">10</span>;<span class="comment">//预编译后即 int i = 10; </span></span><br></pre></td></tr></table></figure>
+<p><strong>强烈不推荐使用#define方式，因为它不能正确处理指针类型</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> * int_p;</span><br><span class="line">int_p x,y; <span class="comment">//这里x、y都是int*指针类型</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int_p int *</span></span><br><span class="line">int_p x,y; <span class="comment">//预编译替换为：int * x,y;   这里x为int*指针类型，而y为int类型</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="三、-undef"><a href="#三、-undef" class="headerlink" title="三、 #undef"></a>三、 #undef</h1><p>宏的作用域从定义位置开始，到文件结束。<strong>可以使用#undef移除一个宏定义</strong><br>用法：<br><code>#undef 宏名</code><br><img src="https://i-blog.csdnimg.cn/blog_migrate/ce60046f80966f0524740724c7a7976d.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="四、命令行定义"><a href="#四、命令行定义" class="headerlink" title="四、命令行定义"></a>四、命令行定义</h1><p>许多C编译器提供了一种能力，允许在命令行中定义符号。用于启动编译过程。当根据同一个源文件要编译一个程序的不同版本的时候，这个特性很有用。假定某个程序中声明了一个某个长度的数组，如果机器内存有限，这个数组必须很小，但是另外一个内存充沛机器上，数组能够大些。如果数组是用类似下面的形式进行声明“</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="built_in">array</span>[ARRAY_SIZE];</span><br></pre></td></tr></table></figure>
+<p>在GCC编译器下可以使用 <code>-D name=stuff</code>,将name的值定义为stuff<br><img src="https://i-blog.csdnimg.cn/blog_migrate/14cd197b01c8e1db7fe1fd266eb21a7a.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="五、-条件编译"><a href="#五、-条件编译" class="headerlink" title="五、 条件编译"></a>五、 条件编译</h1><p>&emsp;在编译一个程序的时候，选定或忽略源文件中某条语句（某组语句）是很常见的。只用于调试程序的语句就是一个很明显的例子。它们不应该出现在程序的产品版本中，但我们可能并不想把这些语句从源代码中删除，因为在需要一些维护性修改时，可能需要重新调试这个程序，此时还需要这些语句，条件编译可以实现这个目的。</p>
+<p><strong>条件编译：满足条件编译某些代码，不满足条件不编译某些代码</strong></p>
+<h2 id="5-1-if-emsp-endif"><a href="#5-1-if-emsp-endif" class="headerlink" title="5.1 #if&emsp;#endif"></a>5.1 #if&emsp;#endif</h2><p><strong>语法：<br>#if&emsp;constant-expression<br>&emsp;&emsp;statements<br>#endif</strong></p>
+<p>说明：<strong>constant-expression必须为常量表达式</strong>，如果它的值为非0，statements部分正常编译，否则预编译阶段删除它们。<br>之所以要常量表达式，因为这个是在预编译阶段进行条件判断，如果是变量，变量只有在程序执行阶段才赋值的。<br><img src="https://i-blog.csdnimg.cn/blog_migrate/7d831711220698cb17a9c8e8cc444b2b.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="5-2-if-emsp-elif-emsp-else-emsp-endif"><a href="#5-2-if-emsp-elif-emsp-else-emsp-endif" class="headerlink" title="5.2 #if&emsp;#elif&emsp;#else&emsp;#endif"></a>5.2 #if&emsp;#elif&emsp;#else&emsp;#endif</h2><p><strong>语法：<br>#if&emsp;constant-expression<br>&emsp;&emsp;statements<br>#elif&emsp;constant-expression<br>&emsp;&emsp;statements<br>#else<br>&emsp;&emsp;statements<br>#endif</strong><br>说明：#elif子句出现次数不限，constant-expression（常量表达式）值非0编译下面statements部分，如果都不满足编译else对应statements部分，#else是可选的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VERSION 1</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> VERSION == 1</span></span><br><span class="line">	<span class="type">int</span> ver = <span class="number">1</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> VERSION == 2</span></span><br><span class="line">    <span class="type">int</span> ver = <span class="number">2</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> VERSION == 3</span></span><br><span class="line">    <span class="type">int</span> ver = <span class="number">3</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="type">int</span> ver = <span class="number">-1</span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;version: %d\n&quot;</span>,ver);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="5-3-是否被定义"><a href="#5-3-是否被定义" class="headerlink" title="5.3 是否被定义"></a>5.3 是否被定义</h2><p>#if&emsp;defined(symbol)<br>#ifdef&emsp;symbol<br>说明：上面两条语句等价<br>功能：<strong>当symbol符号存在</strong>，则编译#if与#endif之间语句<br><img src="https://i-blog.csdnimg.cn/blog_migrate/18f848835079cf4318e2547faf81db4c.png#pic_center" alt="在这里插入图片描述"></p>
+<p>#if&emsp;!defined(symbol)<br>#ifndef&emsp;symbol<br>说明：上面两条语句等价<br>功能：<strong>当symbol符号不存在</strong>，则编译#if与#endif之间语句<br><img src="https://i-blog.csdnimg.cn/blog_migrate/0bfc9288995bc04a8254e735d49b07f2.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="5-4-嵌套指令"><a href="#5-4-嵌套指令" class="headerlink" title="5.4 嵌套指令"></a>5.4 嵌套指令</h2><p>前面提到的指令可以嵌套定义在另一个指令内部，如下面代码所示</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined(OS_UNIX)</span></span><br><span class="line">	<span class="meta">#<span class="keyword">ifdef</span> OPTION1</span></span><br><span class="line">		unix_version_option1();</span><br><span class="line"> 	<span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"> 	<span class="meta">#<span class="keyword">ifdef</span> OPTION2</span></span><br><span class="line"> 		unix_version_option2();</span><br><span class="line"> 	<span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">elif</span> defined(OS_MSDOS)</span></span><br><span class="line"> 	<span class="meta">#<span class="keyword">ifdef</span> OPTION2</span></span><br><span class="line"> 		msdos_version_option2();</span><br><span class="line"> 	<span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>说明：这个例子中，根据操作系统类型选择不同的处理方案，在预处理指令前面加空白符，形成缩进，有利于提高可读性</p>
+<h1 id="六、-文件包含"><a href="#六、-文件包含" class="headerlink" title="六、 文件包含"></a>六、 文件包含</h1><p><code>#include</code> 指令可以使另外一个文件的内容被包含到本文件内编译，就像它实际出现于<code>#include</code>指令的位置一样。这种替换的方式很简单：<strong>预处理器先删除这条指令，并用包含文件的内容取而代之</strong>。<strong>一个头文件被包含10次，那就实际被编译10次</strong><br><img src="https://i-blog.csdnimg.cn/blog_migrate/61c692c2f9992e05db371df029f7376d.png#pic_center" alt="在这里插入图片描述"></p>
+<h2 id="6-1-文件包含两种方式"><a href="#6-1-文件包含两种方式" class="headerlink" title="6.1 文件包含两种方式"></a>6.1 文件包含两种方式</h2><p>编译器支持两种不同方式<code>#include</code>文件包含：库函数头文件和自定义头文件</p>
+<p>库函数头文件：<br><code>#include &lt;filename&gt;</code><br>编译器直接去标准位置去查找，如果找不到就预编译错误，在UNIX(Linux)系统下标准位置为：<code>/usr/include</code></p>
+<p>自定义头文件：<br><code>#include &quot;filename&quot;</code><br>编译器先在源文件所在目录下查找，如果该头文件未找到，编译器就像查找库函数头文件一样在标准位置查找头文件,如果找不到就预编译错误</p>
+<p><strong>对于库函数头文件和自定义头文件使用双括号或尖括号方式都可以，它们区别在于：1. 查找方式不同   2. 通过库函数头文件&lt;&gt;  自定义头文件” “ 这种约定可以判断一个头文件是库函数头文件还是自定义头文件</strong></p>
+<h2 id="6-2-嵌套文件包含"><a href="#6-2-嵌套文件包含" class="headerlink" title="6.2 嵌套文件包含"></a>6.2 嵌套文件包含</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/9fe7acd9bdfba5712b12f84adbbe7618.png#pic_center" alt="在这里插入图片描述"><br>头文件a.h和b.h都包含x.h文件，test.c文件又分别包含a.h、b.h文件，当预编译test.c文件时，x.h文件被包含2次<br><strong>这种嵌套包含在绝大多数情况下出现在大型程序中，它往往需要很多头文件，因此发现这种情况并不容易，为了解决这个问题，可以使用条件编译</strong>。如果所有头文件都像下面这样编写，就可以解决问题：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> _HEADERNAME_H</span></span><br><span class="line">	<span class="meta">#<span class="keyword">define</span> _HEADERNAME_H</span></span><br><span class="line">	<span class="comment">//头文件内容</span></span><br><span class="line"><span class="meta">#end</span></span><br></pre></td></tr></table></figure>
+<p>当头文件第一次被包含时，_HEADERNAME_H未定义，条件判断为真，使用宏定义_HEADERNAME_H，并包含头文件内容。如果头文件再次被包含，条件判断为假，头文件内容不会再次被包含。<br><strong>_HEADERNAME_H ：按照头文件名进行取名，以避免其他头文件使用相同的名字而引起冲突。如头文件add.h, 则 _ADD_H</strong> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/2022/04/17/C%E8%AF%AD%E8%A8%80-%E9%A2%84%E7%BC%96%E8%AF%91%E8%AF%A6%E8%A7%A3/" title="C语言 预编译详解">https://blog.kjlcloud.com/2022/04/17/C语言-预编译详解/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/14/C%E8%AF%AD%E8%A8%80-%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%BC%96%E8%AF%91%E3%80%81%E9%93%BE%E6%8E%A5%E3%80%81%E6%89%A7%E8%A1%8C/" rel="prev" title="C语言 程序的编译、链接、执行">
+                  <i class="fa fa-angle-left"></i> C语言 程序的编译、链接、执行
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/06/28/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%A1%BA%E5%BA%8F%E8%A1%A8/" rel="next" title="数据结构 顺序表">
+                  数据结构 顺序表 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">135k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">22:33</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
