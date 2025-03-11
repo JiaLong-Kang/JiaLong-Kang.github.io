@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="arB0oQZ5Q_2XiRgbMUG2pJOod1NKEmWD9E2-BfBA0Eo">
+  <meta name="baidu-site-verification" content="codeva-HfmgMGHhUU">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、继承概念与语法1.1 继承是什么&emsp;继承（Inheritance）是面向对象编程程序设计（OOP）的一个重要特征。它允许一个类（派生类）继承另一个类（基类）的属性和方法，并可以在此基础上修改已有的功能或增加新的功能。继承呈现了面向对象程序设计的层次结构，体现了由简单到复杂的认知过程，继承是类设计层次的代码复用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 继承">
+<meta property="og:url" content="https://blog.kjlcloud.com/C-%E7%BB%A7%E6%89%BF.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、继承概念与语法1.1 继承是什么&emsp;继承（Inheritance）是面向对象编程程序设计（OOP）的一个重要特征。它允许一个类（派生类）继承另一个类（基类）的属性和方法，并可以在此基础上修改已有的功能或增加新的功能。继承呈现了面向对象程序设计的层次结构，体现了由简单到复杂的认知过程，继承是类设计层次的代码复用。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/5159b20c1b60490ab1066993967e8013.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/ec6275a13d6643e9a7bddfb311941549.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/0c064e0602a143cfb9e1e3de351868a4.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/f2dec37c960149259e6d5ca09036d630.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/7bf69cccfc3e46e284385799c85141ed.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/c06e042aa55e46338e3c31442e7ea45a.png">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/direct/df3a23cb8b6144eb9a4340296d57e6bc.png">
+<meta property="article:published_time" content="2024-08-11T16:12:02.000Z">
+<meta property="article:modified_time" content="2024-08-11T16:12:02.000Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="C&#x2F;C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/direct/5159b20c1b60490ab1066993967e8013.png">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/C-%E7%BB%A7%E6%89%BF.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/C-%E7%BB%A7%E6%89%BF.html","path":"C-继承.html","title":"C++ 继承"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++ 继承 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style><link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Seasons</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">30</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%BB%A7%E6%89%BF%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AF%AD%E6%B3%95"><span class="nav-text">一、继承概念与语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E7%BB%A7%E6%89%BF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.1 继承是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E7%BB%A7%E6%89%BF%E8%AF%AD%E6%B3%95"><span class="nav-text">1.2 继承语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="nav-text">1.3 访问控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-%E7%BB%A7%E6%89%BF%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-text">1.4 继承中的作用域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.5 继承下的类型转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-1-%E5%90%91%E4%B8%8B%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.5.1 向下类型转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-2-%E5%90%91%E4%B8%8A%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-text">1.5.2 向上类型转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-6-%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E5%8F%8B%E5%85%83"><span class="nav-text">1.6 继承下的友元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-7-%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84static%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="nav-text">1.7 继承下的static成员变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%B4%BE%E7%94%9F%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="nav-text">二、派生类的成员函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%9E%84%E9%80%A0%E4%B8%8E%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="nav-text">2.1 派生类构造与析构函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">2.1.1 派生类构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="nav-text">2.1.2 派生类析构函数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E4%B8%8E%E8%B5%8B%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-text">2.2 派生类拷贝构造与赋值函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-%E6%B4%BE%E7%94%9F%E7%B1%BB%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">2.2.1 派生类拷贝构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-%E6%B4%BE%E7%94%9F%E7%B1%BB%E8%B5%8B%E5%80%BC%E5%87%BD%E6%95%B0"><span class="nav-text">2.2.2 派生类赋值函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%8F%B1%E5%BD%A2%E7%BB%A7%E6%89%BF"><span class="nav-text">三、菱形继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E4%BB%80%E4%B9%88%E6%98%AF%E8%8F%B1%E5%BD%A2%E7%BB%A7%E6%89%BF"><span class="nav-text">3.1 什么是菱形继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E8%8F%B1%E5%BD%A2%E7%BB%A7%E6%89%BF%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-text">3.2 菱形继承带来的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E8%8F%B1%E5%BD%A2%E7%BB%A7%E6%89%BF%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80"><span class="nav-text">3.3 菱形继承内存布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-%E8%99%9A%E7%BB%A7%E6%89%BF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">3.4 虚继承解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-1-%E8%99%9A%E7%BB%A7%E6%89%BF%E5%8E%9F%E7%90%86"><span class="nav-text">3.4.1 虚继承原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-2-%E8%99%9A%E7%BB%A7%E6%89%BF%E7%BC%BA%E7%82%B9"><span class="nav-text">3.4.2 虚继承缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BB%A7%E6%89%BF%E4%B8%8E%E7%BB%84%E5%90%88%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-text">四、继承与组合的选择</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYUxvbmctS2FuZw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmtqaWFsb25nQDE2My5jb20=" title="E-Mail → mailto:kjialong@163.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <span class="exturl" data-url="aHR0cHM6Ly9jb29sc2hlbGwuY24=" title="https:&#x2F;&#x2F;coolshell.cn">左耳朵耗子</span>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/C-%E7%BB%A7%E6%89%BF.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++ 继承 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 继承
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-12 00:12:02" itemprop="dateCreated datePublished" datetime="2024-08-12T00:12:02+08:00">2024-08-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-plus-plus/" itemprop="url" rel="index"><span itemprop="name">C plus plus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>45 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><meta name="referrer" content="no-referrer"/>
+
+<h1 id="一、继承概念与语法"><a href="#一、继承概念与语法" class="headerlink" title="一、继承概念与语法"></a>一、继承概念与语法</h1><h2 id="1-1-继承是什么"><a href="#1-1-继承是什么" class="headerlink" title="1.1 继承是什么"></a>1.1 继承是什么</h2><p>&emsp;继承（Inheritance）是面向对象编程程序设计（OOP）的一个重要特征。<strong>它允许一个类（派生类）继承另一个类（基类）的属性和方法</strong>，并可以在此基础上修改已有的功能或增加新的功能。继承呈现了面向对象程序设计的层次结构，体现了由简单到复杂的认知过程，继承是类设计层次的代码复用。</p>
+<span id="more"></span>
+
+<h2 id="1-2-继承语法"><a href="#1-2-继承语法" class="headerlink" title="1.2 继承语法"></a>1.2 继承语法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> &lt;派生类名&gt;: [继承方式] &lt;基类名&gt;    <span class="comment">// 单继承</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// member list</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> &lt;派生类名&gt;: [继承方式] &lt;基类名<span class="number">1</span>&gt;, [继承方式] &lt;基类名<span class="number">2</span>&gt;,...   <span class="comment">// 多继承</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// member list</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>单继承：只有一个基类<br>多继承：有两个或两个以上基类</p>
+<p>继承方式：<code>public</code>、<code>protected</code>、<code>private</code>三种，不指定时使用默认继承方式（不推荐）。<br>a. 对于class，默认继承方式是<code>private</code><br>b. 对于struct，默认继承方式是<code>public</code></p>
+<h2 id="1-3-访问控制"><a href="#1-3-访问控制" class="headerlink" title="1.3 访问控制"></a>1.3 访问控制</h2><p><strong>继承方式与访问限定符共同决定了基类成员在派生类中的可见性</strong>。</p>
+<table>
+<thead>
+<tr>
+<th align="left">类成员\继承方式</th>
+<th align="left">public继承</th>
+<th align="left">protected继承</th>
+<th align="left">private继承</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">基类的public成员</td>
+<td align="left">派生类的public成员</td>
+<td align="left">派生类的protected成员</td>
+<td align="left">派生类的private成员</td>
+</tr>
+<tr>
+<td align="left">基类的protected成员</td>
+<td align="left">派生类的protected成员</td>
+<td align="left">派生类的protected成员</td>
+<td align="left">派生类的private成员</td>
+</tr>
+<tr>
+<td align="left">基类的private成员</td>
+<td align="left">在派生类中不可见</td>
+<td align="left">在派生类中不可见</td>
+<td align="left">在派生类中不可见</td>
+</tr>
+</tbody></table>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span> :</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;name：&quot;</span> &lt;&lt; _name &lt;&lt; <span class="string">&quot; age: &quot;</span> &lt;&lt; _age &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_name</span><span class="params">(<span class="type">const</span> string &amp;name)</span> </span>&#123; _name = name; &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_age</span><span class="params">(<span class="type">int</span> age)</span> </span>&#123; _age = age; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">eat</span><span class="params">()</span> <span class="type">const</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;eating&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> :</span><br><span class="line">    string _name;</span><br><span class="line">    <span class="type">int</span> _age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span> : <span class="keyword">public</span> Person </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">students_eat</span><span class="params">()</span> </span>&#123; <span class="built_in">eat</span>(); &#125;;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _id;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Student s;</span><br><span class="line">    s._name = <span class="string">&quot;张三&quot;</span>; <span class="comment">// 错误，public继承，但_name在基类为private成员，所以在派生类不可见</span></span><br><span class="line">    s._age = <span class="number">10</span>; <span class="comment">// 错误，同上</span></span><br><span class="line">    s.<span class="built_in">set_name</span>(<span class="string">&quot;张三&quot;</span>); <span class="comment">// 正确，public继承，set_name在基类为public成员，所以在派生类为public</span></span><br><span class="line">    s.<span class="built_in">set_age</span>(<span class="number">18</span>); <span class="comment">// 正确，同上</span></span><br><span class="line">    s.<span class="built_in">print</span>(); <span class="comment">// 正确，同上</span></span><br><span class="line">    s.<span class="built_in">eat</span>(); <span class="comment">// 错误，public继承，但eat在基类为protected成员，所以在派生类为protected,只能在类里面调用该函数</span></span><br><span class="line">    s.<span class="built_in">students_eat</span>(); <span class="comment">// 正确</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/direct/5159b20c1b60490ab1066993967e8013.png" alt="在这里插入图片描述"></p>
+<p>问题：不管使用什么继承方式，基类中private的成员在派生类中是不可见的，为什么派生类还要含有这些不可见的成员？</p>
+<ol>
+<li>虽然派生类不能直接访问基类的private成员，但基类可以提供public或protected的方法（方法里面访问private成员）。当派生类调用基类的这些方法时，它会间接访问或修改基类的private成员，所以派生类要含有这些不可见成员。</li>
+<li>为保证对象模型的一致性。如果派生类不包含基类的private成员，那么派生类的对象在内存布局上就会与基类的对象不同，这会导致继承体系中的类型兼容性问题。在派生类中保留基类的私有成员，可以确保派生类对象在内存中包含基类对象的所有部分，这使得基类指针或引用可以安全地指向派生类对象，以及通过派生类对象构造出基类对象。</li>
+</ol>
+<h2 id="1-4-继承中的作用域"><a href="#1-4-继承中的作用域" class="headerlink" title="1.4 继承中的作用域"></a>1.4 继承中的作用域</h2><p>&emsp;在继承体系中,基类和派生类都有<strong>独立的作用域</strong>，如果派生类定义了与基类同名的成员（变量和函数），则基类的同名成员会被隐藏（shadowed），派生类默认访问的是自身的成员，如要访问基类的成员,需要显式指定基类作用域。</p>
+<p>语法: <code>基类名::成员名</code></p>
+<p><strong>注意：</strong></p>
+<ul>
+<li>对于变量来说，同名即构成隐藏。</li>
+<li>对于函数来说，如果基类函数不是虚函数，派生类只要函数同名即构成隐藏。如果基类为虚函数，派生类同名函数的参数列表不相同构成隐藏，而不是重写。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f1</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f1()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f2</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f2()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f3</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f3()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f4</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f4()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">f5</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f5(int i)&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f5</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;A::f5()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f1</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;B::f1()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">f2</span><span class="params">()</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;B::f2()&quot;</span> &lt;&lt; endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">f3</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;B::f3()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f4</span><span class="params">()</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;B::f4()&quot;</span> &lt;&lt; endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    B b;</span><br><span class="line">    b.<span class="built_in">f1</span>(); <span class="comment">// 隐藏</span></span><br><span class="line">    b.<span class="built_in">f2</span>(); <span class="comment">// 隐藏</span></span><br><span class="line">    b.<span class="built_in">f3</span>(); <span class="comment">// 隐藏 </span></span><br><span class="line">    b.<span class="built_in">f4</span>(); <span class="comment">// 隐藏，虽然基类f4为虚函数，但派生类f4与基类f4参数列表不相同，所以不构成覆盖(override)</span></span><br><span class="line">    b.<span class="built_in">f5</span>(); <span class="comment">// 基类有2个f5函数，处于同一作用域，构成函数重载</span></span><br><span class="line">    b.<span class="built_in">f5</span>(<span class="number">1</span>); <span class="comment">// 基类有2个f5函数，处于同一作用域，构成函数重载</span></span><br><span class="line">	</span><br><span class="line">	b.A::<span class="built_in">f1</span>(); <span class="comment">// 使用作用域解析运算符访问基类f1函数</span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码运行后输出内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">B::f1()</span><br><span class="line">B::f2()</span><br><span class="line">B::f3()</span><br><span class="line">B::f4()</span><br><span class="line">A::f5(int i)</span><br><span class="line">A::f5()</span><br><span class="line">A::f1()</span><br></pre></td></tr></table></figure>
+<h2 id="1-5-继承下的类型转换"><a href="#1-5-继承下的类型转换" class="headerlink" title="1.5 继承下的类型转换"></a>1.5 继承下的类型转换</h2><h3 id="1-5-1-向下类型转换"><a href="#1-5-1-向下类型转换" class="headerlink" title="1.5.1 向下类型转换"></a>1.5.1 向下类型转换</h3><p>将基类的指针、引用、对象转换为派生类指针、引用、对象称为向下类型转换。<br>说明：</p>
+<ol>
+<li>将基类对象转换为派生类对象时，实际上参照基类对象创建了一个新的派生类对象，所以派生类要提供一个<code>Derived(const Base&amp;)</code>拷贝构造函数。</li>
+<li>将基类指针、引用转换为派生类指针、引用时没有创建新的对象，编译器只是对这个起始内存空间从按基类类型解释变为按派生类类型解释，所以有内存越界风险。</li>
+<li>对于使用<code>protected/private</code>继承方式，向下类型转换没有什么实际意义，因为基类很多成员对派生类是不可见的。</li>
+</ol>
+<p><img src="https://i-blog.csdnimg.cn/direct/ec6275a13d6643e9a7bddfb311941549.png" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span> :</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;name：&quot;</span> &lt;&lt; _name &lt;&lt; <span class="string">&quot; age: &quot;</span> &lt;&lt; _age &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_name</span><span class="params">(<span class="type">const</span> string &amp;name)</span> </span>&#123; _name = name; &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_age</span><span class="params">(<span class="type">int</span> age)</span> </span>&#123; _age = age; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> :</span><br><span class="line">    string _name;</span><br><span class="line">    <span class="type">int</span> _age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span> : <span class="keyword">public</span> Person </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Student</span>(<span class="type">const</span> Person &amp;obj) &#123;&#125; <span class="comment">// 对象的向下类型转换必须提供该拷贝构造函数</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">set_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123; _id = id; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _id;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Person p;</span><br><span class="line">    <span class="function">Student <span class="title">s</span><span class="params">(p)</span></span>; <span class="comment">// 调用Student(const Person &amp;obj)拷贝构造函数</span></span><br><span class="line">    Student *point = (Student *) &amp;p; <span class="comment">// 将p对象的内存空间按Student类型解释</span></span><br><span class="line">    Student &amp;ref = (Student &amp;) p; <span class="comment">// 将p对象的内存空间按Student类型解释</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// 非法访问内存，point指向的区域实际是Person类型，现在将它按Student类型解释，调用set_id函数会修改p对象后面的内存区域</span></span><br><span class="line">	point-&gt;<span class="built_in">set_id</span>(<span class="number">10</span>); </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-5-2-向上类型转换"><a href="#1-5-2-向上类型转换" class="headerlink" title="1.5.2 向上类型转换"></a>1.5.2 向上类型转换</h3><p>将派生类的指针、引用、对象转换为基类指针、引用、对象称为向上类型转换。<br>说明：</p>
+<ol>
+<li>将派生类对象转换为基类对象时，实际上根据派生类对象裁剪出创建了一个新的基类对象。</li>
+<li>将派生类指针、引用转换为基类指针、引用时没有创建新的对象，编译器只是对这个起始内存空间从按派生类类型解释变为按基类类型解释。</li>
+<li>对于使用<code>protected/private</code>继承方式，向上类型转换没有什么实际意义，且需要通过强制类型转换实现。<br><img src="https://i-blog.csdnimg.cn/direct/0c064e0602a143cfb9e1e3de351868a4.png" alt="在这里插入图片描述"></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Bike</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">move</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">stop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">repair</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">change_color</span><span class="params">(<span class="type">int</span> color)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _color;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Player</span> : <span class="keyword">private</span> Bike </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">start_race</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">end_race</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">cur_strength</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _max_strength;</span><br><span class="line">    <span class="type">int</span> _age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Player player;</span><br><span class="line">    Bike *p = (Bike *) &amp;player; <span class="comment">// 使用protected/private继承时，需要强制类型转换</span></span><br><span class="line">    Bike &amp;ref = (Bike &amp;) player; <span class="comment">// 使用protected/private继承时，需要强制类型转换</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span> :</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;name：&quot;</span> &lt;&lt; _name &lt;&lt; <span class="string">&quot; age: &quot;</span> &lt;&lt; _age &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_name</span><span class="params">(<span class="type">const</span> string &amp;name)</span> </span>&#123; _name = name; &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_age</span><span class="params">(<span class="type">int</span> age)</span> </span>&#123; _age = age; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> :</span><br><span class="line">    string _name;</span><br><span class="line">    <span class="type">int</span> _age;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span> : <span class="keyword">public</span> Person </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">set_id</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123; _id = id; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _id;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Student s;</span><br><span class="line">    Person *point = &amp;s; <span class="comment">// 将s对象的内存空间按Person类型解释</span></span><br><span class="line">    Person &amp;ref = s; <span class="comment">// 将s对象的内存空间按Person类型解释</span></span><br><span class="line">    <span class="function">Person <span class="title">p</span><span class="params">(s)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-6-继承下的友元"><a href="#1-6-继承下的友元" class="headerlink" title="1.6 继承下的友元"></a>1.6 继承下的友元</h2><p><strong>友元关系不能继承</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span>;  <span class="comment">// 前向声明</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line">   	<span class="keyword">friend</span> <span class="keyword">class</span> <span class="title class_">Base</span>;  <span class="comment">// 声明 Base 为 A 的友元类</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> secret = <span class="number">42</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">accessSecret</span><span class="params">(A&amp; a)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Base can access secret: &quot;</span> &lt;&lt; a.secret &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : <span class="keyword">public</span> Base </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">accessSecret</span><span class="params">(A&amp; a)</span> </span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 尝试访问 A 的私有成员,编译错误</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Derived can access secret: &quot;</span> &lt;&lt; a.secret &lt;&lt; std::endl; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    Base base;</span><br><span class="line">    Derived derived;</span><br><span class="line"></span><br><span class="line">    base.<span class="built_in">accessSecret</span>(a);      <span class="comment">// 正常工作，Base 可以访问 A 的私有成员</span></span><br><span class="line">    derived.<span class="built_in">accessSecret</span>(a);   <span class="comment">// 编译错误，Derived 无法访问 A 的私有成员</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-7-继承下的static成员变量"><a href="#1-7-继承下的static成员变量" class="headerlink" title="1.7 继承下的static成员变量"></a>1.7 继承下的static成员变量</h2><p><strong>static成员变量在类中是共享的</strong>，这意味着类的所有实例共享同一个变量，无论派生出多少个类，都只有一个static成员变量 。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> A::_a = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    B b;</span><br><span class="line">    C c;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 打印出的地址相同</span></span><br><span class="line">    cout &lt;&lt; &amp;a._a &lt;&lt; endl; </span><br><span class="line">    cout &lt;&lt; &amp;b._a &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; &amp;c._a &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、派生类的成员函数"><a href="#二、派生类的成员函数" class="headerlink" title="二、派生类的成员函数"></a>二、派生类的成员函数</h1><h2 id="2-1-派生类构造与析构函数"><a href="#2-1-派生类构造与析构函数" class="headerlink" title="2.1 派生类构造与析构函数"></a>2.1 派生类构造与析构函数</h2><h3 id="2-1-1-派生类构造函数"><a href="#2-1-1-派生类构造函数" class="headerlink" title="2.1.1 派生类构造函数"></a>2.1.1 派生类构造函数</h3><p>在派生类中不显式定义构造函数，编译器自动生成构造函数。这个构造函数会先调用基类的默认构造函数，然后调用派生类中自定义类型成员变量的默认构造函数。</p>
+<p>派生类显式定义构造函数说明：</p>
+<ul>
+<li>构造顺序：先基类，再派生类</li>
+<li>若没在派生类的初始化列表中显式指定基类构造函数，编译器会隐式调用基类的无参构造函数</li>
+<li>多重继承时，基类按先后顺序构造</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> a) : _a(a) &#123; cout &lt;&lt; <span class="string">&quot;A()&quot;</span> &lt;&lt; endl; &#125;;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">B</span>(<span class="type">int</span> b) : _b(b) &#123; cout &lt;&lt; <span class="string">&quot;B()&quot;</span> &lt;&lt; endl; &#125;;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> : <span class="keyword">public</span> A, <span class="keyword">public</span> B </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">C</span>(<span class="type">int</span> a, <span class="type">int</span> b, <span class="type">int</span> c) : <span class="built_in">A</span>(a), <span class="built_in">B</span>(b), _c(c) </span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;C()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">C</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// 依次输出 A() 、B() 、C()</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-2-派生类析构函数"><a href="#2-1-2-派生类析构函数" class="headerlink" title="2.1.2 派生类析构函数"></a>2.1.2 派生类析构函数</h3><p>在派生类中不显式定义析构函数，编译器自动生成析构函数。这个析构函数会先调用派生类中自定义类型成员变量的析构函数，然后调用基类的析构函数。</p>
+<p>派生类显式定义析构函数说明：</p>
+<ul>
+<li>析构顺序：先派生类，再基类</li>
+<li>不要显式调用基类析构函数：为了保证析构顺序,编译器会在派生类的析构函数结束前自动调用基类析构函数。如果用户显式调用了,则会对基类析构两次。</li>
+<li>多重继承时，基类析构顺序与基类构造顺序相反</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">A</span>() <span class="comment">// 基类的析构函数建议为虚函数，通过基类指针或引用删除一个派生类对象，virtual确保能调用派生类的析构函数，后续多态章节会详细讲解</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;~A()&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ~<span class="built_in">B</span>() </span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;~B()&quot;</span> &lt;&lt; endl;</span><br><span class="line">        A::~<span class="built_in">A</span>(); <span class="comment">// 不应该显式调用基类的析构函数，这样基类会析构两次</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    B b; <span class="comment">// 依次输出 ~B() 、~A() 、~A()， 基类调用了两次析构函数</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-派生类拷贝构造与赋值函数"><a href="#2-2-派生类拷贝构造与赋值函数" class="headerlink" title="2.2 派生类拷贝构造与赋值函数"></a>2.2 派生类拷贝构造与赋值函数</h2><h3 id="2-2-1-派生类拷贝构造函数"><a href="#2-2-1-派生类拷贝构造函数" class="headerlink" title="2.2.1 派生类拷贝构造函数"></a>2.2.1 派生类拷贝构造函数</h3><p>在派生类中不显式定义拷贝构造函数，编译器自动生成拷贝构造函数。这个拷贝构造函数会先调用基类的拷贝构造函数，然后对派生类对象中内置类型成员变量按字节拷贝（浅拷贝），如果成员变量为自定义类型则调用它的拷贝构造函数。</p>
+<p>派生类显式定义析构函数说明：</p>
+<ul>
+<li>拷贝构造顺序：先基类，再派生类</li>
+<li>若没在派生类的初始化列表中显式指定基类拷贝构造函数，编译器会隐式调用基类的拷贝构造函数</li>
+<li>多重继承时，基类按先后顺序拷贝构造</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> a = <span class="number">0</span>) : _a(a) &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A &amp;obj):_a(obj._A)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;A(const &amp;A)&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">B</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">B</span>(<span class="type">const</span> B &amp;obj) : <span class="built_in">A</span>(obj) </span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;B(const &amp;B)&quot;</span> &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    B b1;</span><br><span class="line">    <span class="function">B <span class="title">b2</span><span class="params">(b1)</span></span>; <span class="comment">// 依次输出 A(const &amp;A)、B(const &amp;B)</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-2-派生类赋值函数"><a href="#2-2-2-派生类赋值函数" class="headerlink" title="2.2.2 派生类赋值函数"></a>2.2.2 派生类赋值函数</h3><p>在派生类中不显式定义赋值函数，编译器自动生成赋值函数。这个赋值函数会先调用基类的赋值函数，然后对派生类对象中内置类型成员变量按字节拷贝（浅拷贝），如果成员变量为自定义类型则调用它的赋值函数。</p>
+<p>派生类显式定义赋值函数说明：</p>
+<ul>
+<li>赋值顺序：先基类，再派生类</li>
+<li>多重继承时，基类按先后顺序赋值</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="type">int</span> a = <span class="number">0</span>) : _a(a) &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    A &amp;<span class="keyword">operator</span>=(<span class="type">const</span> A &amp;obj) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;obj) </span><br><span class="line">        &#123;</span><br><span class="line">            _a = obj._a;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;A=()&quot;</span> &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">B</span>() = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    B &amp;<span class="keyword">operator</span>=(<span class="type">const</span> B &amp;obj) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;obj) </span><br><span class="line">        &#123;</span><br><span class="line">            A::<span class="keyword">operator</span>=(obj); <span class="comment">// 调用基类的赋值函数</span></span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;B=()&quot;</span> &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    B b1;</span><br><span class="line">    B b2;</span><br><span class="line">    b2 = b1; <span class="comment">// 依次输出 A=()、B=()</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="三、菱形继承"><a href="#三、菱形继承" class="headerlink" title="三、菱形继承"></a>三、菱形继承</h1><h2 id="3-1-什么是菱形继承"><a href="#3-1-什么是菱形继承" class="headerlink" title="3.1 什么是菱形继承"></a>3.1 什么是菱形继承</h2><p>多个子类继承同一个父类而又有子类同时继承这几个子类或其子孙类。<br><img src="https://i-blog.csdnimg.cn/direct/f2dec37c960149259e6d5ca09036d630.png" alt="在这里插入图片描述"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    std::string _name;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span> : <span class="keyword">public</span> Person &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="type">int</span> _num; <span class="comment">// 学号</span></span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Teacher</span> : <span class="keyword">public</span> Person&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="type">int</span> _id; <span class="comment">// 职工编号</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Assistant</span> : <span class="keyword">public</span> Student, <span class="keyword">public</span> Teacher</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    std::string _majorCourse; <span class="comment">// 主修课程</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-菱形继承带来的问题"><a href="#3-2-菱形继承带来的问题" class="headerlink" title="3.2 菱形继承带来的问题"></a>3.2 菱形继承带来的问题</h2><p>菱形继承带来了<strong>二义性</strong>和<strong>数据冗余</strong>的问题。</p>
+<p>二义性：<code>Student</code>和<code>Teacher</code>类都继承<code>Person</code>类，所以它们继承了_name属性，<code>Assistant</code>类继承<code>Student</code>和<code>Teacher</code>类，所以在<code>Assistant</code>类中访问_name时会有歧义，编译器不知道是访问<code>Student</code>类的_name还是<code>Teacher</code>类的_name。</p>
+<p>数据冗余：对于<code>Assistant</code>对象来说存放两份_name。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Assistant a;</span><br><span class="line">    a._name = <span class="string">&quot;张三&quot;</span>; <span class="comment">// 错误，二义性</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 指定基类作用域解决二义性问题，但是无法解决数据冗余问题。</span></span><br><span class="line">    a.Student::_name = <span class="string">&quot;张三&quot;</span>; </span><br><span class="line">    a.Teacher::_name = <span class="string">&quot;李四&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>指定基类作用域解决二义性问题，但是用起来很奇怪，对<code>Assistant</code>类来说_name属性应该只有一个才对，不能我学生身份时有一个名字，教师身份时又有一个名字，而且没有解决数据冗余问题。</p>
+<h2 id="3-3-菱形继承内存布局"><a href="#3-3-菱形继承内存布局" class="headerlink" title="3.3 菱形继承内存布局"></a>3.3 菱形继承内存布局</h2><p>为了便于观察菱形继承的内存布局，下面使用简化的类结构。<br>测试环境： MSVC编译器 32位</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> : <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">D</span> : <span class="keyword">public</span> B, <span class="keyword">public</span> C </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _d;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    D d;</span><br><span class="line">    d.B::_a = <span class="number">1</span>;</span><br><span class="line">    d.C::_a = <span class="number">2</span>;</span><br><span class="line">    d._b = <span class="number">3</span>;</span><br><span class="line">    d._c = <span class="number">4</span>;</span><br><span class="line">    d._d = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/direct/7bf69cccfc3e46e284385799c85141ed.png" alt="在这里插入图片描述"></p>
+<h2 id="3-4-虚继承解决方案"><a href="#3-4-虚继承解决方案" class="headerlink" title="3.4 虚继承解决方案"></a>3.4 虚继承解决方案</h2><h3 id="3-4-1-虚继承原理"><a href="#3-4-1-虚继承原理" class="headerlink" title="3.4.1 虚继承原理"></a>3.4.1 虚继承原理</h3><p>&emsp;虚继承（虚拟继承） 是面向对象编程中的一种技术，是指一个指定的基类，在继承体系结构中，将其成员数据实例共享给也从这个基类型直接或间接派生的其它类。通过虚继承可以解决菱形继承带来的二义性与数据冗余问题。</p>
+<p>语法：<br><code>class Derive: virtual public Base&#123;&#125;;</code></p>
+<p><font color=red >注意：只有直接继承基类的派生类需要进行虚继承,间接继承的派生类不需要。</font><br>测试环境： MSVC编译器 32位</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> : <span class="keyword">virtual</span> <span class="keyword">public</span> A </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _c;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">D</span> : <span class="keyword">public</span> B, <span class="keyword">public</span> C </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _d;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    D d;</span><br><span class="line">    d.B::_a = <span class="number">1</span>;</span><br><span class="line">    d.C::_a = <span class="number">2</span>;</span><br><span class="line">    d._b = <span class="number">3</span>;</span><br><span class="line">    d._c = <span class="number">4</span>;</span><br><span class="line">    d._d = <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/direct/c06e042aa55e46338e3c31442e7ea45a.png" alt="在这里插入图片描述"><br>观察d对象内存视图可以发现，使用虚继承后，将同属于B和C的A存放到对象最下面， 将 B空间位置原来存放基类A的地方现在存放了一个指针，C空间位置原来存放基类A的地方现在也变为存放了一个指针，这两个指针为虚基表指针，虚基表中存放了A的偏移量。查看B的虚基表（0x00bfbb40）可以看到有一个值0x14000000(补码)，转换为源码后对应的值为20，B空间首地址加上偏移量20刚好是A中成员_a的地址。查看C的虚基表（0x00bfbb48）可以看到有一个值0x0c000000(补码)，转换为源码后对应的值为12，C空间首地址加上偏移量12刚好是A中成员_a的地址。这就是虚继承解决二义性与数据冗余的原理。</p>
+<p>说明：</p>
+<ul>
+<li>虚基表中起始全0的4个字节空间是为了实现多态的虚表指针预留的。</li>
+<li>虚继承的基类只会调用一次构造.</li>
+<li>菱形继承没有虚基表,菱形虚拟继承才有虚基表</li>
+</ul>
+<p><strong>同一派生类的所有对象共享一份虚基表</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D d1, d2 ,d3;</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/direct/df3a23cb8b6144eb9a4340296d57e6bc.png" alt="在这里插入图片描述"></p>
+<h3 id="3-4-2-虚继承缺点"><a href="#3-4-2-虚继承缺点" class="headerlink" title="3.4.2 虚继承缺点"></a>3.4.2 虚继承缺点</h3><ol>
+<li>参照前文部分，虚继承对于B类与C类的开发者提出更高要求，能预言出未来会被多继承而引发的菱形继承问题。</li>
+<li>在<code>public</code>继承下向上类型转换是安全的，但是虚继承改变了对象内存布局，类型转换时编译器要做很多额外操作，效率低下。</li>
+</ol>
+<h1 id="四、继承与组合的选择"><a href="#四、继承与组合的选择" class="headerlink" title="四、继承与组合的选择"></a>四、继承与组合的选择</h1><p><strong>组合：</strong></p>
+<ul>
+<li>具有”has-a”或”contain-a”的关系</li>
+<li>子对象所属类的源代码可有可无</li>
+<li>类间是水平关系，相比继承可减少类的层次</li>
+<li>黑盒复用，功能复用</li>
+</ul>
+<p><strong>继承：继承方式不同，目的不同</strong></p>
+<ul>
+<li>基类源代码必须有</li>
+<li>白盒复用，代码复用</li>
+<li>public继承表示“is-a”关系</li>
+<li>private继承表示“has-a”，”contain-a”，”implement of”关系，完全可以换成组合</li>
+<li>protected继承同private，同时便于在多层继承中保持这种关系</li>
+</ul>
+<p>总结：除了”is-a”关系使用public继承以外其它都使用组合。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/C-%E7%BB%A7%E6%89%BF.html" title="C++ 继承">https://blog.kjlcloud.com/C-继承.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/C-auto%E4%B8%8Edecltype%E5%8F%8A%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E5%90%8E%E7%BD%AE.html" rel="prev" title="C++ auto与decltype及函数返回类型后置">
+                  <i class="fa fa-angle-left"></i> C++ auto与decltype及函数返回类型后置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/C-%E5%A4%9A%E6%80%81.html" rel="next" title="C++ 多态">
+                  C++ 多态 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">136k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">22:38</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>

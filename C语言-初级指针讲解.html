@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="arB0oQZ5Q_2XiRgbMUG2pJOod1NKEmWD9E2-BfBA0Eo">
+  <meta name="baidu-site-verification" content="codeva-HfmgMGHhUU">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、指针是什么1.1 地址是什么&emsp;在计算机中，为了对内存空间进行管理，将内存空间划分成若干个存储单元。每个存储单元大小为1字节，并对每个存储单元编号，这个编号被称为地址（内存地址）。可以把内存想象成一个大的教学楼，为了对教学楼管理，分成了许多教室，这里教室等同于存储单元，为了方便找到某一个教室，可以对教室进行编号，如：301教室，这里的教室编号等同于地址。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言 初级指针讲解">
+<meta property="og:url" content="https://blog.kjlcloud.com/C%E8%AF%AD%E8%A8%80-%E5%88%9D%E7%BA%A7%E6%8C%87%E9%92%88%E8%AE%B2%E8%A7%A3.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、指针是什么1.1 地址是什么&emsp;在计算机中，为了对内存空间进行管理，将内存空间划分成若干个存储单元。每个存储单元大小为1字节，并对每个存储单元编号，这个编号被称为地址（内存地址）。可以把内存想象成一个大的教学楼，为了对教学楼管理，分成了许多教室，这里教室等同于存储单元，为了方便找到某一个教室，可以对教室进行编号，如：301教室，这里的教室编号等同于地址。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/c04d9ce5535534115244fe3c485d3687.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/16518245e4ac96ec823e7df245d17bd9.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/cb627686cb67453fecbac400ec6ea385.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/200632d165e4e88eb94b67d624e7d2e7.png#pic_center">
+<meta property="og:image" content="https://i-blog.csdnimg.cn/blog_migrate/f627a041f2e9657aced5787f8165a5d7.png#pic_center">
+<meta property="article:published_time" content="2022-01-17T06:05:37.000Z">
+<meta property="article:modified_time" content="2025-03-04T06:11:06.094Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="指针">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-blog.csdnimg.cn/blog_migrate/c04d9ce5535534115244fe3c485d3687.png#pic_center">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/C%E8%AF%AD%E8%A8%80-%E5%88%9D%E7%BA%A7%E6%8C%87%E9%92%88%E8%AE%B2%E8%A7%A3.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/C%E8%AF%AD%E8%A8%80-%E5%88%9D%E7%BA%A7%E6%8C%87%E9%92%88%E8%AE%B2%E8%A7%A3.html","path":"C语言-初级指针讲解.html","title":"C语言 初级指针讲解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C语言 初级指针讲解 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style><link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Seasons</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">30</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">45</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%8C%87%E9%92%88%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">一、指针是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%9C%B0%E5%9D%80%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.1 地址是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E6%8C%87%E9%92%88%E4%B8%8E%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F"><span class="nav-text">1.2 指针与指针变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B%E6%84%8F%E4%B9%89"><span class="nav-text">二、指针类型意义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E6%8C%87%E9%92%88-%E6%95%B4%E6%95%B0"><span class="nav-text">2.1 指针+-整数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E6%8C%87%E9%92%88%E7%9A%84%E8%A7%A3%E5%BC%95%E7%94%A8"><span class="nav-text">2.2 指针的解引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%87%8E%E6%8C%87%E9%92%88"><span class="nav-text">三、野指针</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E9%87%8E%E6%8C%87%E9%92%88%E6%88%90%E5%9B%A0"><span class="nav-text">3.1 野指针成因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-1-%E6%8C%87%E9%92%88%E6%9C%AA%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-text">3.1.1 指针未初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-2-%E6%8C%87%E9%92%88%E8%B6%8A%E7%95%8C%E8%AE%BF%E9%97%AE"><span class="nav-text">3.1.2 指针越界访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-3-%E6%8C%87%E9%92%88%E6%8C%87%E5%90%91%E7%9A%84%E7%A9%BA%E9%97%B4%E5%B7%B2%E7%BB%8F%E9%87%8A%E6%94%BE"><span class="nav-text">3.1.3 指针指向的空间已经释放</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E9%81%BF%E5%85%8D%E9%87%8E%E6%8C%87%E9%92%88%E6%96%B9%E6%B3%95"><span class="nav-text">3.2 避免野指针方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8C%87%E9%92%88%E8%BF%90%E7%AE%97"><span class="nav-text">四、指针运算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E6%8C%87%E9%92%88-%E6%95%B4%E6%95%B0"><span class="nav-text">4.1 指针+-整数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E6%8C%87%E9%92%88-%E6%8C%87%E9%92%88"><span class="nav-text">4.2 指针-指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-%E6%8C%87%E9%92%88%E7%9A%84%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97"><span class="nav-text">4.3 指针的关系运算</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%8C%87%E9%92%88%E4%B8%8E%E6%95%B0%E7%BB%84"><span class="nav-text">五、指针与数组</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-%E6%95%B0%E7%BB%84%E5%90%8D%E6%84%8F%E4%B9%89"><span class="nav-text">5.1 数组名意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-%E6%95%B0%E7%BB%84%E5%90%8D%E4%B8%A4%E4%B8%AA%E4%BE%8B%E5%A4%96"><span class="nav-text">5.2 数组名两个例外</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYUxvbmctS2FuZw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmtqaWFsb25nQDE2My5jb20=" title="E-Mail → mailto:kjialong@163.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <span class="exturl" data-url="aHR0cHM6Ly9jb29sc2hlbGwuY24=" title="https:&#x2F;&#x2F;coolshell.cn">左耳朵耗子</span>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/C%E8%AF%AD%E8%A8%80-%E5%88%9D%E7%BA%A7%E6%8C%87%E9%92%88%E8%AE%B2%E8%A7%A3.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C语言 初级指针讲解 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C语言 初级指针讲解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-01-17 14:05:37" itemprop="dateCreated datePublished" datetime="2022-01-17T14:05:37+08:00">2022-01-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-03-04 14:11:06" itemprop="dateModified" datetime="2025-03-04T14:11:06+08:00">2025-03-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-language/" itemprop="url" rel="index"><span itemprop="name">C language</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>23 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><meta name="referrer" content="no-referrer"/>
+
+<h1 id="一、指针是什么"><a href="#一、指针是什么" class="headerlink" title="一、指针是什么"></a>一、指针是什么</h1><h2 id="1-1-地址是什么"><a href="#1-1-地址是什么" class="headerlink" title="1.1 地址是什么"></a>1.1 地址是什么</h2><p>&emsp;在计算机中，为了对内存空间进行管理，将内存空间划分成若干个存储单元。每个存储单元大小为1字节，并对每个存储单元编号，这个编号被称为地址（内存地址）。可以把内存想象成一个大的教学楼，为了对教学楼管理，分成了许多教室，这里教室等同于存储单元，为了方便找到某一个教室，可以对教室进行编号，如：301教室，这里的教室编号等同于地址。<br><img src="https://i-blog.csdnimg.cn/blog_migrate/c04d9ce5535534115244fe3c485d3687.png#pic_center" alt="在这里插入图片描述"></p>
+<span id="more"></span>
+
+<h2 id="1-2-指针与指针变量"><a href="#1-2-指针与指针变量" class="headerlink" title="1.2 指针与指针变量"></a>1.2 指针与指针变量</h2><p><strong>指针：指针就是内存地址</strong><br><strong>指针变量：用来存放内存地址的变量</strong>，存储的地址对应了内存中某个存储单元，通过解引用可以访问到对应存储单元里面的值。</p>
+<p>程序执行时会为变量分配存储单元存储变量的值，根据变量类型的不同，分配的存储单元数量（空间大小）也不一样。<br>char类型 1字节&emsp;short类型 2字节&emsp;int类型 4字节<br><img src="https://i-blog.csdnimg.cn/blog_migrate/16518245e4ac96ec823e7df245d17bd9.png#pic_center" alt="在这里插入图片描述"></p>
+<p><strong>指针变量的声明：</strong><br><strong>类型 * 变量名;</strong><br>  如 ： int * p;<br>“变量名” 前 * 表示其后的变量是指针变量，该变量只能存储地址<br>”类型“ 表示该指针变量类型，如： int *代表整形指针类型，也代表是为了存放 int 类型变量的地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = &amp;i; <span class="comment">//这里 &amp; 是取地址运算符即取出变量n的所占存放单元起始地址，这里 * 是指针类型声明的标志，int 代表指针变量p所存储是一个int类型变量的地址</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, p); <span class="comment">// %p   指以指针方式打印</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0135F</span>E10</span><br></pre></td></tr></table></figure>
+<p><strong>说明：&amp;取出的是一个变量在内存中起始存储单元的地址，比如：int类型所占4个存储单元，但只会取出4个存储单元中最小的地址</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span>* p = &amp;i;<span class="comment">//指针p存放变量i的地址</span></span><br><span class="line">    *p = <span class="number">20</span>; <span class="comment">//这里*指访问指针变量p存储地址对应的存储单元，并将值修改为20 等同于 i = 20;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, i);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">20</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/cb627686cb67453fecbac400ec6ea385.png#pic_center" alt="在这里插入图片描述"></p>
+<h1 id="二、指针类型意义"><a href="#二、指针类型意义" class="headerlink" title="二、指针类型意义"></a>二、指针类型意义</h1><p>我们知道变量有不同类型，比如：int、char、float、double等，那么指针变量也是有不同类型的<br><strong>说明：为了讲解方便，后续的指针指的是指针变量，后面不再阐述</strong></p>
+<p>指针是一个变量，那么它也会占内存空间，在32位平台里面，指针所占内存空间大小为4字节。在64位平台里面，指针所占内存空间大小为8字节。<strong>指针所占内存空间大小与指针类型无关</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span> <span class="comment">//此例子是在32位平台演示</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;char * = %d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="type">char</span>*));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;short * = %d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="type">short</span>*));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;int * = %d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="type">int</span>*));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;long * = %d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="type">long</span>*));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;double * = %d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="type">double</span>*));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> * = <span class="number">4</span></span><br><span class="line"><span class="type">short</span> * = <span class="number">4</span></span><br><span class="line"><span class="type">int</span> * = <span class="number">4</span></span><br><span class="line"><span class="type">long</span> * = <span class="number">4</span></span><br><span class="line"><span class="type">double</span> * = <span class="number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>既然指针所占内存空间大小与指针类型无关那么为什么还要不同的指针类型呢，比如： int *、char *、double *等指针类型，下面会逐渐讲解</p>
+<h2 id="2-1-指针-整数"><a href="#2-1-指针-整数" class="headerlink" title="2.1 指针+-整数"></a>2.1 指针+-整数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">10</span>;</span><br><span class="line">    <span class="type">char</span>* pa = &amp;i; <span class="comment">//使用char*类型指针存储i的地址</span></span><br><span class="line">    <span class="type">short</span>* pb = &amp;i; <span class="comment">//使用short*类型指针存储i的地址</span></span><br><span class="line">    <span class="type">int</span>* pc = &amp;i;	<span class="comment">//使用int*类型指针存储i的地址</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pa = %p\n&quot;</span>, pa); </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pb = %p\n&quot;</span>, pb);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pc = %p\n&quot;</span>, pc);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;--------------\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pa+1 = %p\n&quot;</span>, pa+<span class="number">1</span>); <span class="comment">//地址向后移动1个字节，因为char大小为1字节</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pb+1 = %p\n&quot;</span>, pb+<span class="number">1</span>);<span class="comment">//地址向后移动2个字节，因为short大小为1字节</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;pc+1 = %p\n&quot;</span>, pc+<span class="number">1</span>); <span class="comment">//地址向后移动4个字节，因为int大小为1字节</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pa = <span class="number">006F</span>F804</span><br><span class="line">pb = <span class="number">006F</span>F804</span><br><span class="line">pc = <span class="number">006F</span>F804</span><br><span class="line">--------------</span><br><span class="line">pa+<span class="number">1</span> = <span class="number">006F</span>F805 </span><br><span class="line">pb+<span class="number">1</span> = <span class="number">006F</span>F806</span><br><span class="line">pc+<span class="number">1</span> = <span class="number">006F</span>F808</span><br></pre></td></tr></table></figure>
+
+<p><strong>指针的类型决定了指针向前或者向后走一步有多大</strong></p>
+<h2 id="2-2-指针的解引用"><a href="#2-2-指针的解引用" class="headerlink" title="2.2 指针的解引用"></a>2.2 指针的解引用</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">1127</span>; <span class="comment">//0x代表16进制</span></span><br><span class="line">    <span class="comment">//00000000 00000000 00000100 01100111  1127的补码</span></span><br><span class="line">    <span class="type">char</span>* pa = &amp;i;</span><br><span class="line">    <span class="type">int</span>* pb = &amp;i;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, *pa); <span class="comment">//这里*指访问指针变量pa存储的地址对应的存储单元</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, *pb);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">103</span></span><br><span class="line"><span class="number">1127</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/200632d165e4e88eb94b67d624e7d2e7.png#pic_center" alt="在这里插入图片描述"><br><strong>指针类型决定了，对指针解引用的时候有多大的操作权限</strong><br>char* 的指针解引用就只能访问一个字节，而 int* 的指针的解引用就能访问四个字节。</p>
+<h1 id="三、野指针"><a href="#三、野指针" class="headerlink" title="三、野指针"></a>三、野指针</h1><p>野指针：就是指针指向的位置是不可知的（随机的、不正确的、没有明确限制的）</p>
+<h2 id="3-1-野指针成因"><a href="#3-1-野指针成因" class="headerlink" title="3.1 野指针成因"></a>3.1 野指针成因</h2><h3 id="3-1-1-指针未初始化"><a href="#3-1-1-指针未初始化" class="headerlink" title="3.1.1 指针未初始化"></a>3.1.1 指针未初始化</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span>* p;<span class="comment">//指针未初始化，存储的值（地址）默认为随机值</span></span><br><span class="line">    *p = <span class="number">30</span>; <span class="comment">//修改一个未知空间的值</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-2-指针越界访问"><a href="#3-1-2-指针越界访问" class="headerlink" title="3.1.2 指针越界访问"></a>3.1.2 指针越界访问</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span> &#125;;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span>* p = &amp;arr[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt;= <span class="number">5</span>; i++) <span class="comment">//当i=5时，越界访问，访问了数组最后一个元素后面的空间</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, *(p + i)); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-1-3-指针指向的空间已经释放"><a href="#3-1-3-指针指向的空间已经释放" class="headerlink" title="3.1.3 指针指向的空间已经释放"></a>3.1.3 指针指向的空间已经释放</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span>* <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">10</span>; <span class="comment">//i是局部变量，函数结束后所在存储空间会被系统回收</span></span><br><span class="line">    <span class="keyword">return</span> &amp;i; </span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span>* p = test();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, *p); <span class="comment">//指针p存储空间已经不属于程序了，此时访问非法</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-2-避免野指针方法"><a href="#3-2-避免野指针方法" class="headerlink" title="3.2 避免野指针方法"></a>3.2 避免野指针方法</h2><ol>
+<li>指针初始化</li>
+<li>小心指针越界</li>
+<li>指针指向空间释放即使置NULL</li>
+<li>避免返回局部变量的地址</li>
+<li>指针使用之前检查有效性</li>
+</ol>
+<h1 id="四、指针运算"><a href="#四、指针运算" class="headerlink" title="四、指针运算"></a>四、指针运算</h1><h2 id="4-1-指针-整数"><a href="#4-1-指针-整数" class="headerlink" title="4.1 指针+-整数"></a>4.1 指针+-整数</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span> &#125;;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span>* p = &amp;arr[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;arr[%d] = %d\n&quot;</span>, i, *(p + i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr[<span class="number">0</span>] = <span class="number">1</span></span><br><span class="line">arr[<span class="number">1</span>] = <span class="number">2</span></span><br><span class="line">arr[<span class="number">2</span>] = <span class="number">3</span></span><br><span class="line">arr[<span class="number">3</span>] = <span class="number">4</span></span><br><span class="line">arr[<span class="number">4</span>] = <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p><strong>可以通过对指针+-整数，访问指针指向的存储单元后面或前面内存区域</strong></p>
+<h2 id="4-2-指针-指针"><a href="#4-2-指针-指针" class="headerlink" title="4.2 指针-指针"></a>4.2 指针-指针</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span> &#125;;</span><br><span class="line">    <span class="type">int</span>* pa = &amp;arr[<span class="number">0</span>];</span><br><span class="line">    <span class="type">int</span>* pb = &amp;arr[<span class="number">3</span>];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;指针pa与指针pb中间间隔%d个元素\n&quot;</span>, pb - pa);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">指针pa与指针pb中间间隔<span class="number">3</span>个元素</span><br></pre></td></tr></table></figure>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/f627a041f2e9657aced5787f8165a5d7.png#pic_center" alt="在这里插入图片描述"><br><strong>指针-指针得到数字的绝对值是指针和指针之间元素的个数<br>前提：两个指针指向的是同一个数组</strong></p>
+<h2 id="4-3-指针的关系运算"><a href="#4-3-指针的关系运算" class="headerlink" title="4.3 指针的关系运算"></a>4.3 指针的关系运算</h2><p> 将int arr[5]数组5个元素赋值为0<br><strong>方法一：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>];</span><br><span class="line">    <span class="type">int</span>* vp;</span><br><span class="line">    <span class="keyword">for</span> (vp = &amp;arr[<span class="number">5</span>]; vp &gt; &amp;arr[<span class="number">0</span>];)</span><br><span class="line">    &#123;</span><br><span class="line">        *--vp = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>方法二：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>];</span><br><span class="line">    <span class="type">int</span>* vp;</span><br><span class="line">    <span class="keyword">for</span> (vp = &amp;arr[<span class="number">4</span>]; vp &gt;= &amp;arr[<span class="number">0</span>]; vp--)</span><br><span class="line">    &#123;</span><br><span class="line">        *vp = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>C语言标准规定：允许指向数组元素的指针与指向数组最后一个元素后面的那个内存位置的指针比较，但是不允许与指向第一个元素之前的那个内存位置的指针进行比较。</strong></p>
+<h1 id="五、指针与数组"><a href="#五、指针与数组" class="headerlink" title="五、指针与数组"></a>五、指针与数组</h1><h2 id="5-1-数组名意义"><a href="#5-1-数组名意义" class="headerlink" title="5.1 数组名意义"></a>5.1 数组名意义</h2><p><strong>在一般情况下数组名就是数组首元素地址</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">10</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">0</span> &#125;;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, arr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%p\n&quot;</span>, &amp;arr[<span class="number">0</span>]);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">00</span>DFFC20</span><br><span class="line"><span class="number">00</span>DFFC20</span><br></pre></td></tr></table></figure>
+<p>我们可以将数组名当成地址存放到指针中去，然后对指针+整数，访问数组后续元素的地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">0</span> &#125;;</span><br><span class="line">    <span class="type">int</span>* p = arr; <span class="comment">//指针存放数组首元素的地址</span></span><br><span class="line">    <span class="type">int</span> sz = <span class="keyword">sizeof</span>(arr) / <span class="keyword">sizeof</span>(arr[<span class="number">0</span>]); <span class="comment">//求数组元素大小</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; sz; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;&amp;arr[%d] = %p   &lt;====&gt; p+%d = %p\n&quot;</span>, i, &amp;arr[i], i, p + i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&amp;arr[<span class="number">0</span>] = <span class="number">00</span>EFFB7C   &lt;====&gt; p+<span class="number">0</span> = <span class="number">00</span>EFFB7C</span><br><span class="line">&amp;arr[<span class="number">1</span>] = <span class="number">00</span>EFFB80   &lt;====&gt; p+<span class="number">1</span> = <span class="number">00</span>EFFB80</span><br><span class="line">&amp;arr[<span class="number">2</span>] = <span class="number">00</span>EFFB84   &lt;====&gt; p+<span class="number">2</span> = <span class="number">00</span>EFFB84</span><br><span class="line">&amp;arr[<span class="number">3</span>] = <span class="number">00</span>EFFB88   &lt;====&gt; p+<span class="number">3</span> = <span class="number">00</span>EFFB88</span><br><span class="line">&amp;arr[<span class="number">4</span>] = <span class="number">00</span>EFFB8C   &lt;====&gt; p+<span class="number">4</span> = <span class="number">00</span>EFFB8C</span><br><span class="line">&amp;arr[<span class="number">5</span>] = <span class="number">00</span>EFFB90   &lt;====&gt; p+<span class="number">5</span> = <span class="number">00</span>EFFB90</span><br><span class="line">&amp;arr[<span class="number">6</span>] = <span class="number">00</span>EFFB94   &lt;====&gt; p+<span class="number">6</span> = <span class="number">00</span>EFFB94</span><br><span class="line">&amp;arr[<span class="number">7</span>] = <span class="number">00</span>EFFB98   &lt;====&gt; p+<span class="number">7</span> = <span class="number">00</span>EFFB98</span><br><span class="line">&amp;arr[<span class="number">8</span>] = <span class="number">00</span>EFFB9C   &lt;====&gt; p+<span class="number">8</span> = <span class="number">00</span>EFFB9C</span><br><span class="line">&amp;arr[<span class="number">9</span>] = <span class="number">00</span>EFFBA0   &lt;====&gt; p+<span class="number">9</span> = <span class="number">00</span>EFFBA0</span><br></pre></td></tr></table></figure>
+<h2 id="5-2-数组名两个例外"><a href="#5-2-数组名两个例外" class="headerlink" title="5.2 数组名两个例外"></a>5.2 数组名两个例外</h2><p><strong>sizeof(数组名) ：sizeof内部单独放一个数组名，数组名代表整个数组</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span> &#125;;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="keyword">sizeof</span>(arr)); <span class="comment">//arr数组有5个元素，每个元素4字节</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">20</span></span><br></pre></td></tr></table></figure>
+<p><strong>&amp;数组名  ：取出的是数组地址，数组名表示整个数组</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> arr[<span class="number">5</span>] = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span> &#125;;</span><br><span class="line">    <span class="type">int</span>* pa = arr; <span class="comment">//取出数组首元素地址</span></span><br><span class="line">    <span class="type">int</span>* pb = &amp;arr;<span class="comment">//取出整个数组地址</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;arr = %p\n&quot;</span>, pa);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;arr = %p\n&quot;</span>, pb);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;---------------\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;arr +1 = %p\n&quot;</span>, pa+<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;arr +1 = %p\n&quot;</span>, pb+<span class="number">1</span>); <span class="comment">//数组有5个元素，每个元素4字节，所以数组后面的第一片空间地址为 数组首元素地址+元素个数*元素大小</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">arr = <span class="number">00</span>DBFE24</span><br><span class="line">&amp;arr = <span class="number">00</span>DBFE24</span><br><span class="line">---------------</span><br><span class="line">arr +<span class="number">1</span> = <span class="number">00</span>DBFE28</span><br><span class="line">&amp;arr +<span class="number">1</span> = <span class="number">00</span>DBFE38</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/C%E8%AF%AD%E8%A8%80-%E5%88%9D%E7%BA%A7%E6%8C%87%E9%92%88%E8%AE%B2%E8%A7%A3.html" title="C语言 初级指针讲解">https://blog.kjlcloud.com/C语言-初级指针讲解.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%8C%87%E9%92%88/" rel="tag"># 指针</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/C%E8%AF%AD%E8%A8%80-%E8%BF%90%E7%AE%97%E7%AC%A6.html" rel="prev" title="C语言 运算符">
+                  <i class="fa fa-angle-left"></i> C语言 运算符
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E5%8F%98%E9%87%8F%E4%B8%8Estatic%E5%85%B3%E9%94%AE%E5%AD%97.html" rel="next" title="变量与static关键字">
+                  变量与static关键字 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">136k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">22:38</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
