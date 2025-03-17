@@ -3,8 +3,9 @@ User-agent: *
 Allow: /
 Allow: /archives/
 Allow: /categories/
-Allow: /tags/
 Allow: /about-me/
+Disallow: /page/
+Disallow: /tags/
 Disallow: /vendors/
 Disallow: /js/
 Disallow: /css/
