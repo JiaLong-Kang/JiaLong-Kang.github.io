@@ -28,16 +28,16 @@
 <meta property="og:site_name" content="四季">
 <meta property="og:description" content="一、基本概念1.1 qcow2是什么qcow2 是一种虚拟磁盘镜像格式，全称是 “QEMU Copy-On-Write version 2”。它可以用一个文件的形式来表示一块固定大小的块设备磁盘。  动态分配：qcow2 支持按需分配空间，不会立即占用所有磁盘容量，而是随着数据写入逐渐扩展大小，节省存储空间。  支持快照：qcow2 格式允许创建快照。  压缩和加密：qcow2 格式支持对数据进行">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%99%E6%95%B0%E6%8D%AE1.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%99%E6%95%B0%E6%8D%AE2.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/Cluster_mapping.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%99%E6%95%B0%E6%8D%AE1.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%99%E6%95%B0%E6%8D%AE2.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/Cluster_mapping.png">
 <meta property="article:published_time" content="2024-11-01T09:07:37.000Z">
 <meta property="article:modified_time" content="2024-11-01T09:07:37.000Z">
 <meta property="article:author" content="JiaLong Kang">
 <meta property="article:tag" content="qcow2">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F.png">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F.png">
 
 
 <link rel="canonical" href="https://blog.kjlcloud.com/qcow2%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F.html">
@@ -398,7 +398,7 @@
 <p><span style="color: red;">注意:  除非特别说明，否则每个Header extension type只能在image中出现一次</span></p>
 <h3 id="1-3-3-backing-file-name"><a href="#1-3-3-backing-file-name" class="headerlink" title="1.3.3 backing file name"></a>1.3.3 backing file name</h3><p>头扩展区域的末尾和第一个cluster的末尾之间的剩余空间可用于存放后备文件路径名。</p>
 <h2 id="1-4-qcow2文件格式"><a href="#1-4-qcow2文件格式" class="headerlink" title="1.4 qcow2文件格式"></a>1.4 qcow2文件格式</h2><p>refcount table&#x2F;refcount block&#x2F;l1&#x2F;l2的顺序关系不限</p>
-<img src="qcow2文件格式.png">
+<img src="qcow2文件格式/qcow2文件格式.png">
 
 <h1 id="二、Host-cluster-management"><a href="#二、Host-cluster-management" class="headerlink" title="二、Host cluster management"></a>二、Host cluster management</h1><p>qcow2通过维护引用计数来管理Host cluster的分配。refcount为0表示cluster 空闲，1表示cluster已被使用，&gt;&#x3D;2表示cluster已被使用并且任何写访问都必须执行COW操作。引用计数通过二级表进行管理。</p>
 <p><strong>refcount table</strong></p>
@@ -427,15 +427,15 @@
 Bit  0 -  x:  cluster的refcount
 </code></pre>
 <h1 id="三、Cluster-mapping"><a href="#三、Cluster-mapping" class="headerlink" title="三、Cluster mapping"></a>三、Cluster mapping</h1><h2 id="3-1-为什么需要Cluster-mapping"><a href="#3-1-为什么需要Cluster-mapping" class="headerlink" title="3.1 为什么需要Cluster mapping"></a>3.1 为什么需要Cluster mapping</h2><p>以向一个空的qcow2文件写入数据为例，假设cluster大小为65536字节。</p>
-<img src="虚拟机写数据1.png">
+<img src="qcow2文件格式/虚拟机写数据1.png">
 
 <p>从前两次写操作来看，似乎虚拟机写入的数据与写入qcow2文件的数据成某种线性关系。起始为0，大小65536的数据写入第一个cluster中。起始为65536，大小65535的数据写入第二个cluster。如果第三次写起始为655360，大小65536数据？qcow2并不会把它放在第11个cluster中，而是放在第三个cluster中。<strong>这样qcow2就不会向raw一样产生空洞，qcow2文件随着不停的写入数据而慢慢变大。然而这样也同时打破了虚拟的地址偏移与qcow2的地址偏移的线形关系</strong>。</p>
 <p>正是因为虚拟机写入的数据与写入到qcow2文件中的数据不成线性关系，因此qcow2 需要通过映射表查询cluster真实的存储位置。为此qcow2文件中通过L2 table来记录虚拟地址偏移与qcow2文件地址偏移的关系。L2 table中的每一项都是一个64位地址，存某个cluster在qcow2文件中的offset。</p>
 <p><strong>guest cluster对应host cluster真实位置保存在L2 table的第N个元素中，其中N与guest cluster成线性关系。</strong></p>
-<img src="虚拟机写数据2.png" >
+<img src="qcow2文件格式/虚拟机写数据2.png" >
 
 <p>一个qcow2文件以cluster为单位进行切分, L2 table记录guest cluster到host cluster的映射关系。一个L2 table大小等于一个cluster的大小。cluster默认大小是64K，即一个L2 table有8192个元素，可以管理512M大小空间。当超过512M大小的时候qcow2会新建一个L2 table，由于新建的L2 table与之前的L2 table地址不相邻（其实每一个L2 table只是qcow2文件中的一个cluster，每次新建一个L2 table也就是分配一个cluster）。所以qcow2没办法简单的记录它，因此产生 L1 table。 L1 table中每一个元素都指向一个L2 table的地址。L1 ta ble的地址保存在qcow2 header中。</p>
-<img src="Cluster_mapping.png"  style="zoom:50%;" >
+<img src="qcow2文件格式/Cluster_mapping.png"  style="zoom:50%;" >
 
 <h2 id="3-2-L1-table与-L2-table"><a href="#3-2-L1-table与-L2-table" class="headerlink" title="3.2 L1 table与 L2 table"></a>3.2 L1 table与 L2 table</h2><p>与refcounts一样，qcow2使用二级表将guest cluster映射到host cluster。它们被称为L1 table和L2 table。</p>
 <p><strong>L1 table</strong></p>
@@ -574,7 +574,7 @@ Bit  0 -  x:  cluster的refcount
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">22:38</span>
+    <span title="Reading time total">22:40</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>

@@ -28,17 +28,17 @@
 <meta property="og:site_name" content="四季">
 <meta property="og:description" content="一、智能指针简介1.1 为什么需要智能指针123456789101112131415161718&#x2F;&#x2F; 动态申请资源后忘记释放void UseRawPointer()&#123;	string *str &#x3D; new string(&quot;hello world&quot;);	  return;&#125;void UseRawPointer()&#123;	string *str &#x3D; new">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%86%85%E5%AD%98%E5%9B%BE1.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%86%85%E5%AD%98%E5%9B%BE2.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A81.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A82.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E5%86%85%E5%AD%98%E5%9B%BE1.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E5%86%85%E5%AD%98%E5%9B%BE2.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A81.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A82.png">
 <meta property="article:published_time" content="2024-09-10T02:10:31.000Z">
-<meta property="article:modified_time" content="2025-03-04T09:04:11.596Z">
+<meta property="article:modified_time" content="2025-03-17T06:06:14.183Z">
 <meta property="article:author" content="JiaLong Kang">
 <meta property="article:tag" content="C++ 11">
 <meta property="article:tag" content="智能指针">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.kjlcloud.com/%E5%86%85%E5%AD%98%E5%9B%BE1.png">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/%E5%86%85%E5%AD%98%E5%9B%BE1.png">
 
 
 <link rel="canonical" href="https://blog.kjlcloud.com/C-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88.html">
@@ -262,7 +262,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-03-04 17:04:11" itemprop="dateModified" datetime="2025-03-04T17:04:11+08:00">2025-03-04</time>
+      <time title="Modified: 2025-03-17 14:06:14" itemprop="dateModified" datetime="2025-03-17T14:06:14+08:00">2025-03-17</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -369,12 +369,12 @@
 </ul>
 <p><strong>优点1 提高内存分配效率</strong></p>
 <p>通过使用原始的 <code>new</code>运算符分配对象, 然后传递给 shared_ptr (也就是使用 shared_ptr 的构造函数) 的话, shared_ptr 的实现没有办法选择, 而只能单独的分配控制块，总共需要分配2次内存空间。</p>
-<img src="内存图1.png" alt="内存图1" style="zoom:50%;" />
+<img src="C-智能指针/内存图1.png" alt="内存图1" style="zoom:50%;" />
 
 
 
 <p><code>make_shared</code> 只需要<strong>单次内存分配</strong>，提高了性能，并减少了内存碎片。</p>
-<img src="内存图2.png" alt="内存图2" style="zoom:50%;" />
+<img src="C-智能指针/内存图2.png" alt="内存图2" style="zoom:50%;" />
 
 <p><strong>优点2 异常安全</strong></p>
 <p>使用 <code>new</code> 直接创建对象时，如果在 <code>std::shared_ptr</code> 构造之前抛出异常，可能会导致内存泄漏。而使用 <code>make_shared</code> 可以避免这种情况，因为对象的分配和智能指针的构造是原子操作，不会中途出现内存泄漏的问题。</p>
@@ -410,14 +410,14 @@
 </li>
 </ul>
 <h2 id="5-1-循环引用"><a href="#5-1-循环引用" class="headerlink" title="5.1 循环引用"></a>5.1 循环引用</h2><p>循环引用：指两个或多个对象通过 <code>shared_ptr</code> 相互引用，导致它们的引用计数永远不会降为零，从而引发内存泄漏。</p>
-<img src="循环引用1.png" alt="循环引用1" style="zoom:50%;" />
+<img src="C-智能指针/循环引用1.png" alt="循环引用1" style="zoom:50%;" />
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>; </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    shared_ptr&lt;B&gt; ptrB;  <span class="comment">// 指向 B 的 shared_ptr</span></span><br><span class="line">    <span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A Constructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A Destructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    shared_ptr&lt;A&gt; ptrA;  <span class="comment">// 指向 A 的 shared_ptr</span></span><br><span class="line">    <span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B Constructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B Destructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::shared_ptr&lt;A&gt; a = std::<span class="built_in">make_shared</span>&lt;A&gt;();</span><br><span class="line">    std::shared_ptr&lt;B&gt; b = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// A 和 B 互相引用</span></span><br><span class="line">    a-&gt;ptrB = b;</span><br><span class="line">    b-&gt;ptrA = a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 这里不会调用析构函数，因为循环引用导致引用计数无法降为0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
 <p>使用<code>weak_ptr</code>解决循环引用问题</p>
-<img src="循环引用2.png" alt="循环引用2" style="zoom:50%;" />
+<img src="C-智能指针/循环引用2.png" alt="循环引用2" style="zoom:50%;" />
 
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">B</span>; </span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    shared_ptr&lt;B&gt; ptrB;  <span class="comment">// 指向 B 的 shared_ptr</span></span><br><span class="line">    <span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A Constructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A Destructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    weak_ptr&lt;A&gt; ptrA;  <span class="comment">// 使用 weak_ptr 代替 shared_ptr</span></span><br><span class="line">    <span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B Constructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">B</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;B Destructor&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::shared_ptr&lt;A&gt; a = std::<span class="built_in">make_shared</span>&lt;A&gt;();</span><br><span class="line">    std::shared_ptr&lt;B&gt; b = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line"></span><br><span class="line">    a-&gt;ptrB = b;</span><br><span class="line">    b-&gt;ptrA = a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// 正常调用析构函数，解决了循环引用问题</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -532,7 +532,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">22:38</span>
+    <span title="Reading time total">22:40</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>

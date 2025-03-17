@@ -28,19 +28,19 @@
 <meta property="og:site_name" content="四季">
 <meta property="og:description" content="一、FUSE基本概念1.1 FUSE 是什么FUSE 是 Filesystem in Userspace 的缩写，也就是常说的用户态文件系统。Linux内核官方文档对 FUSE 的解释如下：  What is FUSE?FUSE is a userspace filesystem framework. It consists of a kernel module (fuse.ko), a user">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE1.gif">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E5%86%85%E6%A0%B8%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE2.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E7%94%A8%E6%88%B7%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE1.gif">
-<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E5%8E%9F%E7%90%86%E5%9B%BE.png">
-<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E7%AE%80%E6%B4%81IO%E6%B5%81%E7%A8%8B%E5%9B%BE.gif">
-<meta property="og:image" content="https://blog.kjlcloud.com/%E6%95%B0%E6%8D%AE%E9%80%9A%E9%81%93.gif">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/FUSE%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/%E5%86%85%E6%A0%B8%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE1.gif">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/%E5%86%85%E6%A0%B8%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE2.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/%E7%94%A8%E6%88%B7%E6%80%81%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FIO%E6%B5%81%E7%A8%8B%E5%9B%BE1.gif">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/FUSE%E5%8E%9F%E7%90%86%E5%9B%BE.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/FUSE%E7%AE%80%E6%B4%81IO%E6%B5%81%E7%A8%8B%E5%9B%BE.gif">
+<meta property="og:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/%E6%95%B0%E6%8D%AE%E9%80%9A%E9%81%93.gif">
 <meta property="article:published_time" content="2024-10-30T07:52:05.000Z">
 <meta property="article:modified_time" content="2024-10-30T07:52:05.000Z">
 <meta property="article:author" content="JiaLong Kang">
 <meta property="article:tag" content="FUSE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.kjlcloud.com/FUSE%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88/FUSE%E6%9E%B6%E6%9E%84%E5%9B%BE.png">
 
 
 <link rel="canonical" href="https://blog.kjlcloud.com/FUSE%E6%98%AF%E4%BB%80%E4%B9%88.html">
@@ -283,14 +283,14 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Word count in article: </span>
-      <span>2.6k</span>
+      <span>2.7k</span>
     </span>
     <span class="post-meta-item" title="Reading time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Reading time &asymp;</span>
-      <span>26 mins.</span>
+      <span>27 mins.</span>
     </span>
 </div>
 
@@ -313,27 +313,27 @@
 <li><strong>mount 工具 fusermount</strong> ；</li>
 </ol>
 <p>这 3 个组件一起完成一件事：可以在用户态实现文件系统，并且让IO在内核态和用户态文件系统之间自由穿梭。</p>
-<img src="FUSE架构图.png" width="50%">
+<img src="FUSE是什么/FUSE架构图.png" width="50%">
 
 <h2 id="1-2-为什么需要FUSE"><a href="#1-2-为什么需要FUSE" class="headerlink" title="1.2 为什么需要FUSE"></a>1.2 为什么需要FUSE</h2><p>FUSE被称为用户空间文件系统，为什么要强调用户空间呢？接触过Linux内核的同学大概会知道，早期的文件系统开发只能在内核中。文件系统一般是实现在内核里面的，比如，Ext4、Fat32、NTFS(Kernel原生版)等常见的文件系统，其代码都在内核中，内核开发的难点在于调试和排查故障，而FUSE特殊之处就是，其文件系统的<strong>核心逻辑</strong>是在<strong>用户空间</strong>实现的。</p>
 <p>有了FUSE之后，我们就可以在用户态空间实现文件系统。<br><strong>优点</strong>：开发便捷，易于调试。安全性高，崩溃不会影响整个系统。</p>
 <p><strong>缺点</strong>：性能较低，会在用户态和内核态之间频繁切换，带来了性能开销。</p>
 <h3 id="1-2-1-内核态文件系统IO流程"><a href="#1-2-1-内核态文件系统IO流程" class="headerlink" title="1.2.1 内核态文件系统IO流程"></a>1.2.1 内核态文件系统IO流程</h3><p>早期的文件系统是位于内核之中， 处于VFS之下，块设备之上的一个位置。对上呈现文件存储实现，对下管理裸块设备。也就是说早期文件系统是内核的一个模块。那就可以理解了，内核模块的开发之所以艰难就是难在<strong>调试和排障</strong>，用户态的程序你可以随意 debug，出问题最多也就是 panic，coredump，内核态的程序出了问题就是宕机，所有现场都丢失，你只能通过日志，kdump 等手段来排查。</p>
 <p>下图是没有FUSE的时候，IO经过内核文件系统的一个大概流程</p>
-<img src="内核态文件系统IO流程图1.gif"  >
+<img src="FUSE是什么/内核态文件系统IO流程图1.gif"  >
 
-<p>比较详细的流程图<br><img src="内核态文件系统IO流程图2.png"  ></p>
+<p>比较详细的流程图<br><img src="FUSE是什么/内核态文件系统IO流程图2.png"  ></p>
 <h3 id="1-2-2-用户态文件系统IO流程"><a href="#1-2-2-用户态文件系统IO流程" class="headerlink" title="1.2.2 用户态文件系统IO流程"></a>1.2.2 用户态文件系统IO流程</h3><p>注意：图中简化了用户态之上的逻辑处理。</p>
-<img src="用户态文件系统IO流程图1.gif"  >
+<img src="FUSE是什么/用户态文件系统IO流程图1.gif"  >
 
-<h1 id="二、FUSE进阶"><a href="#二、FUSE进阶" class="headerlink" title="二、FUSE进阶"></a>二、FUSE进阶</h1><h2 id="2-1-FUSE原理"><a href="#2-1-FUSE原理" class="headerlink" title="2.1 FUSE原理"></a>2.1 FUSE原理</h2><p>首先看一眼 wiki 上有对 FUSE 的 ls -l &#x2F;tmp&#x2F;fuse 命令的演示图：<br><img src="FUSE原理图.png"  ></p>
+<h1 id="二、FUSE进阶"><a href="#二、FUSE进阶" class="headerlink" title="二、FUSE进阶"></a>二、FUSE进阶</h1><h2 id="2-1-FUSE原理"><a href="#2-1-FUSE原理" class="headerlink" title="2.1 FUSE原理"></a>2.1 FUSE原理</h2><p>首先看一眼 wiki 上有对 FUSE 的 ls -l &#x2F;tmp&#x2F;fuse 命令的演示图：<br><img src="FUSE是什么/FUSE原理图.png"  ></p>
 <p>背景：一个用户态文件系统，挂载点为 &#x2F;tmp&#x2F;fuse ，用户二进制程序文件为 .&#x2F;hello（该二进制程序可以理解为用户自己根据自身需求实现的文件系统）;</p>
 <p>这个图的意思是：</p>
 <ol>
 <li>当执行 ls -l &#x2F;tmp&#x2F;fuse 命令的时候，流程如下：<br> (1) IO 请求先进内核，经VFS传递给内核 FUSE 文件系统模块；<br> (2) 内核 FUSE 模块把请求发给到用户态，由 .&#x2F;hello 程序接收并且处理。处理完成之后，响应原路返回；</li>
 </ol>
 <p>简化的 IO 动画示意图：</p>
-<img src="FUSE简洁IO流程图.gif"  >
+<img src="FUSE是什么/FUSE简洁IO流程图.gif"  >
 
 <p>通过这两张图，对 FUSE IO 的流程应该就清晰了，内核 FUSE 模块在内核态中间做协议封装和协议解析的工作，它接收从VFS下来的请求并按照 FUSE 协议转发到用户态，然后接收用户态的响应，并随后回复给用户。<strong>FUSE在这条IO路径是做了一个透明中转站的作用</strong>，用户完全不感知这套框架。我们把中间的 FUSE 当作一个黑盒遮住，就更容易理解了。</p>
 <p>fuse.ko和libfuse库的作用：</p>
@@ -371,7 +371,7 @@
 <h2 id="2-3-dev-fuse"><a href="#2-3-dev-fuse" class="headerlink" title="2.3 &#x2F;dev&#x2F;fuse"></a>2.3 &#x2F;dev&#x2F;fuse</h2><p>现在对数据协议的格式，转发和转运的模块我们也知道了。现在还差一个关键的点：数据包的通道，换句话说，内核模块的“包裹”发到哪里？用户程序又从哪里读取拿到这个“包裹”。</p>
 <p><strong>答案是：&#x2F;dev&#x2F;fuse ，这个虚设备文件就是内核模块和用户程序的桥梁</strong>。</p>
 <p>这样一切都顺理成章了，整个过程中，用户的IO通过正常的系统调用进来，走到内核文件系统FUSE，FUSE文件系统把这个IO请求按照FUSE协议封装起来，打包成特定的格式，通过 &#x2F;dev&#x2F;fuse 这个管道传递到用户态。在此之前有守护进程监听这个管道，看到有消息出来之后，立马读出来，然后利用libfuse库解析协议，之后就是用户文件系统的代码逻辑了。</p>
-<p>该过程示意图如下（省略了拆解包的步骤）：<br><img src="数据通道.gif"  ></p>
+<p>该过程示意图如下（省略了拆解包的步骤）：<br><img src="FUSE是什么/数据通道.gif"  ></p>
 <h1 id="三、-FUSE-的使用"><a href="#三、-FUSE-的使用" class="headerlink" title="三、 FUSE 的使用"></a>三、 FUSE 的使用</h1><ol>
 <li>检查内核是否支持，即是否有fuse.ko 内核模块。可运行下列命令检查，如果不报错则表示内核支持并且已经加载。</li>
 </ol>
@@ -513,7 +513,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">22:38</span>
+    <span title="Reading time total">22:40</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>

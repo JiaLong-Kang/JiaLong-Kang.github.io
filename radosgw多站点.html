@@ -28,13 +28,13 @@
 <meta property="og:site_name" content="四季">
 <meta property="og:description" content="一、概述1.1 概念与术语radosgw多站点指的是在多个地理位置或数据中心之间进行数据复制和同步，用于实现负载均衡、灾备恢复以及满足数据在特定地理位置存储要求。  zone:  多站点中最小的配置单元，通俗指在同一地域内，电力和网络互相独立的物理区域。每个 zone 都有一个或多个 ceph-radosgw 实例。  zone group:   由一个或多zone组成，包含一个master zo">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://blog.kjlcloud.com/rgw_multisite.png">
+<meta property="og:image" content="https://blog.kjlcloud.com/radosgw%E5%A4%9A%E7%AB%99%E7%82%B9/rgw_multisite.png">
 <meta property="article:published_time" content="2023-09-10T12:28:52.000Z">
 <meta property="article:modified_time" content="2023-09-10T12:28:52.000Z">
 <meta property="article:author" content="JiaLong Kang">
 <meta property="article:tag" content="radosgw">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.kjlcloud.com/rgw_multisite.png">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/radosgw%E5%A4%9A%E7%AB%99%E7%82%B9/rgw_multisite.png">
 
 
 <link rel="canonical" href="https://blog.kjlcloud.com/radosgw%E5%A4%9A%E7%AB%99%E7%82%B9.html">
@@ -349,7 +349,7 @@
 <td>域</td>
 </tr>
 </tbody></table>
-<h2 id="1-2-演示环境说明"><a href="#1-2-演示环境说明" class="headerlink" title="1.2 演示环境说明"></a>1.2 演示环境说明</h2><div align=center><img src="rgw_multisite.png"></div>
+<h2 id="1-2-演示环境说明"><a href="#1-2-演示环境说明" class="headerlink" title="1.2 演示环境说明"></a>1.2 演示环境说明</h2><div align=center><img src="radosgw多站点/rgw_multisite.png"></div>
 
 <p>演示环境为单realm下的单zone group，zone group内有两个zone。<font color=red><strong>bingo-A为已存放数据的老集群，准备作为主站点，bingo-B为未存放数据的新集群，用来作为灾备的备站点</strong></font>。bingo-A与bingo-B的Ceph版本为12.2.x。</p>
 <h1 id="二、主站点配置"><a href="#二、主站点配置" class="headerlink" title="二、主站点配置"></a>二、主站点配置</h1><h2 id="2-1-主站点环境查看"><a href="#2-1-主站点环境查看" class="headerlink" title="2.1 主站点环境查看"></a>2.1 主站点环境查看</h2><p>radosgw安装后会在Ceph集群创建一些带有<code>rgw</code>的名字的pool。如果上传过对象还会自动创建<code>default.rgw.buckets.index</code>和<code>default.rgw.buckets.data</code>这两个pool。</p>
@@ -727,7 +727,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">22:38</span>
+    <span title="Reading time total">22:40</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
