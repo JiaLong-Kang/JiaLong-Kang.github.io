@@ -71,8 +71,8 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
-<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style><link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+</head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
   <div class="headband"></div>
@@ -316,7 +316,13 @@
 <span id="more"></span>
 
 <p><img src="https://i-blog.csdnimg.cn/blog_migrate/5b5cd3c3d20a3303b6be2d30cc77c1b2.png#pic_center" alt="在这里插入图片描述"></p>
-<h1 id="二、-define-宏定义"><a href="#二、-define-宏定义" class="headerlink" title="二、 #define 宏定义"></a>二、 #define 宏定义</h1><p>#define是 C语言 和 C++ 中的一个预处理指令，其中的“#”表示这是一条预处理命令·。凡是以“#”开头的均为预处理命令，“define”为宏定义命令</p>
+<h1 id="二、-define-宏定义"><a href="#二、-define-宏定义" class="headerlink" title="二、 #define 宏定义"></a>二、 #define 宏定义</h1><p>#define是 C语言 和 C++ 中的一个预处理指令，其中的“#”表示这是一条预处理命令·。凡是以“#”开头的均为预处理命令，“define”为宏定义命令。建议将宏定义在文件最开始位置。</p>
+<p><font color=red >在 C++ 中，宏不受命名空间的影响，因为宏在预处理阶段，而命名空间是在编译阶段。</font></p>
+<p>下面这个C++代码会编译失败，因为对<code>MAX</code>重复定义。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> kjl</span><br><span class="line">&#123;</span><br><span class="line">		<span class="meta">#<span class="keyword">define</span> MAX 10	  </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> kxl</span><br><span class="line">&#123;</span><br><span class="line">		<span class="meta">#<span class="keyword">define</span> MAX 20	  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="2-1-定义不带参数的宏"><a href="#2-1-定义不带参数的宏" class="headerlink" title="2.1 定义不带参数的宏"></a>2.1 定义不带参数的宏</h2><p>用法：<br><code>#define 标识符（宏名） 对应值</code><br>作用：在预编译时，将标识符替换为对应值，对应值可以是任何文本内容<br>例如：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int_t int   <span class="comment">//对关键字int起了一个别名，注意int_t不是类型,只是会替换为int  </span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> do_forever for(;;) <span class="comment">//用do_forever描述了一个无限for循环</span></span></span><br></pre></td></tr></table></figure>
 
@@ -385,6 +391,8 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> int_t int  <span class="comment">//这里int_t只是符号，不是类型，在预编译后会被替换</span></span></span><br><span class="line"><span class="type">int_t</span> i = <span class="number">10</span>;<span class="comment">//预编译后即 int i = 10; </span></span><br></pre></td></tr></table></figure>
 <p><strong>强烈不推荐使用#define方式，因为它不能正确处理指针类型</strong></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> * int_p;</span><br><span class="line">int_p x,y; <span class="comment">//这里x、y都是int*指针类型</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> int_p int *</span></span><br><span class="line">int_p x,y; <span class="comment">//预编译替换为：int * x,y;   这里x为int*指针类型，而y为int类型</span></span><br></pre></td></tr></table></figure>
+
+
 
 <h1 id="三、-undef"><a href="#三、-undef" class="headerlink" title="三、 #undef"></a>三、 #undef</h1><p>宏的作用域从定义位置开始，到文件结束。<strong>可以使用#undef移除一个宏定义</strong><br>用法：<br><code>#undef 宏名</code><br><img src="https://i-blog.csdnimg.cn/blog_migrate/ce60046f80966f0524740724c7a7976d.png#pic_center" alt="在这里插入图片描述"></p>
 <h1 id="四、命令行定义"><a href="#四、命令行定义" class="headerlink" title="四、命令行定义"></a>四、命令行定义</h1><p>许多C编译器提供了一种能力，允许在命令行中定义符号。用于启动编译过程。当根据同一个源文件要编译一个程序的不同版本的时候，这个特性很有用。假定某个程序中声明了一个某个长度的数组，如果机器内存有限，这个数组必须很小，但是另外一个内存充沛机器上，数组能够大些。如果数组是用类似下面的形式进行声明“</p>
@@ -508,7 +516,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">22:40</span>
+    <span title="Reading time total">22:41</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
