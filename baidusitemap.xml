@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.kjlcloud.com/C-%E6%9E%9A%E4%B8%BE%E5%85%A8%E8%A7%A3%E6%9E%90%EF%BC%9A%E4%B8%8D%E6%96%AD%E6%BC%94%E8%BF%9B%E7%9A%84Enum.html</loc>
+    <lastmod>2025-03-22</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.kjlcloud.com/C-auto%E4%B8%8Edecltype%E5%8F%8A%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E5%90%8E%E7%BD%AE.html</loc>
+    <lastmod>2025-03-22</lastmod>
+  </url>
+  <url>
     <loc>https://blog.kjlcloud.com/C-lambda.html</loc>
     <lastmod>2025-03-17</lastmod>
   </url>
@@ -38,10 +46,6 @@
   </url>
   <url>
     <loc>https://blog.kjlcloud.com/C-namespace.html</loc>
-    <lastmod>2025-03-04</lastmod>
-  </url>
-  <url>
-    <loc>https://blog.kjlcloud.com/C-auto%E4%B8%8Edecltype%E5%8F%8A%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E5%90%8E%E7%BD%AE.html</loc>
     <lastmod>2025-03-04</lastmod>
   </url>
   <url>
