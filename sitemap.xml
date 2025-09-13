@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.kjlcloud.com/C-C-%E4%B8%80%E6%AC%A1%E6%A0%88%E5%8C%BA%E4%BD%BF%E7%94%A8%E5%A4%A7%E6%95%B0%E7%BB%84%E5%BC%95%E5%8F%91%E7%9A%84%E6%AE%B5%E9%94%99%E8%AF%AF.html</loc>
+    
+    <lastmod>2025-09-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.kjlcloud.com/C-17-20%E6%96%B0%E7%89%B9%E6%80%A7-%E6%94%AF%E6%8C%81%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%AD%E5%8F%A5%E7%9A%84if%E3%80%81switch%E3%80%81%E8%8C%83%E5%9B%B4for.html</loc>
     
     <lastmod>2025-06-14</lastmod>
@@ -463,218 +472,225 @@
 
   <url>
     <loc>https://blog.kjlcloud.com/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/sizeof/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/C-11/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/C-14/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.kjlcloud.com/tags/C-17/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/namespace/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/tags/C-20/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E8%BF%90%E7%AE%97%E7%AC%A6/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/Segmentation-fault/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/tags/assert/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E5%BA%93%E5%87%BD%E6%95%B0/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/sizeof/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E5%87%BD%E6%95%B0/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/C-11/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%8C%87%E9%92%88/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/C-14/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/namespace/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/tags/%E5%A4%9A%E6%80%81/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%95%B0%E7%BB%84/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/%E8%BF%90%E7%AE%97%E7%AC%A6/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/errno/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E4%BD%8D%E6%AE%B5/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/%E5%BA%93%E5%87%BD%E6%95%B0/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/%E5%87%BD%E6%95%B0/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/tags/FUSE/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/RocksDB/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/LSM-Tree/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/gtest/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/qcow2/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/radosgw/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%8E%92%E5%BA%8F/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E5%8D%95%E9%93%BE%E8%A1%A8/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/%E9%A1%BA%E5%BA%8F%E8%A1%A8/</loc>
-    <lastmod>2025-06-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.kjlcloud.com/tags/RPC/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/tags/%E6%8C%87%E9%92%88/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/tags/%E7%BC%BA%E7%9C%81%E5%8F%82%E6%95%B0/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E6%95%B0%E7%BB%84/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/errno/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E4%BD%8D%E6%AE%B5/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/FUSE/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/RocksDB/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/LSM-Tree/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/gtest/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/qcow2/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/radosgw/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E6%8E%92%E5%BA%8F/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E9%A1%BA%E5%BA%8F%E8%A1%A8/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/RPC/</loc>
+    <lastmod>2025-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.kjlcloud.com/tags/%E5%8D%95%E9%93%BE%E8%A1%A8/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -682,78 +698,78 @@
 
   
   <url>
-    <loc>https://blog.kjlcloud.com/categories/%E7%BC%96%E7%A8%8B%E9%99%B7%E9%98%B1/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/categories/C-plus-plus/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.kjlcloud.com/categories/C-plus-plus/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <loc>https://blog.kjlcloud.com/categories/%E7%BC%96%E7%A8%8B%E9%99%B7%E9%98%B1/</loc>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/C-language/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/FUSE/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/RocksDB/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/Google-Test/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/Ceph/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.kjlcloud.com/categories/%E9%80%9A%E4%BF%A1%E6%A1%86%E6%9E%B6/</loc>
-    <lastmod>2025-06-14</lastmod>
+    <lastmod>2025-09-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
