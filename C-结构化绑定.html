@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="arB0oQZ5Q_2XiRgbMUG2pJOod1NKEmWD9E2-BfBA0Eo">
+  <meta name="baidu-site-verification" content="codeva-HfmgMGHhUU">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、结构化绑定1.1 引子在 C++中，如果一个函数需要返回两个值，我们可以使用std::pair 。例如：有个函数查找并返回一个整数数组的最小值和最大值。 12345678910111213141516std::pair&lt;int, int&gt; findMinMax(const std::vector&lt;int&gt; &amp;numbers)&#123;    if (numbe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 结构化绑定">
+<meta property="og:url" content="https://blog.kjlcloud.com/C-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、结构化绑定1.1 引子在 C++中，如果一个函数需要返回两个值，我们可以使用std::pair 。例如：有个函数查找并返回一个整数数组的最小值和最大值。 12345678910111213141516std::pair&lt;int, int&gt; findMinMax(const std::vector&lt;int&gt; &amp;numbers)&#123;    if (numbe">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-10T03:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-02T17:28:34.732Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="C++ 17">
+<meta property="article:tag" content="C++ 20">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/C-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/C-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A.html","path":"C-结构化绑定.html","title":"C++ 结构化绑定"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++ 结构化绑定 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Seasons</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">31</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">49</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A"><span class="nav-text">一、结构化绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%BC%95%E5%AD%90"><span class="nav-text">1.1 引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.2 结构化绑定是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A"><span class="nav-text">1.3 深入理解结构化绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-%E7%BB%91%E5%AE%9A%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.3.1 绑定是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-%E5%AD%90%E5%AF%B9%E8%B1%A1%E5%88%AB%E5%90%8D%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.3.2 子对象别名是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-3-%E7%BB%91%E5%AE%9A%E4%B8%8D%E8%83%BD%E5%BF%BD%E7%95%A5%E9%83%A8%E5%88%86%E5%AD%90%E5%AF%B9%E8%B1%A1"><span class="nav-text">1.3.3 绑定不能忽略部分子对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%8F%AF%E7%BB%91%E5%AE%9A%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">二、可绑定的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E7%BB%91%E5%AE%9A%E5%88%B0%E5%8E%9F%E7%94%9F%E6%95%B0%E7%BB%84"><span class="nav-text">2.1 绑定到原生数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E7%BB%91%E5%AE%9A%E5%88%B0%E7%BB%93%E6%9E%84%E4%BD%93%E5%92%8C%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="nav-text">2.2 绑定到结构体和类对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E7%BB%91%E5%AE%9A%E5%88%B0%E5%85%83%E7%BB%84%E5%92%8C%E7%B1%BB%E5%85%83%E7%BB%84"><span class="nav-text">2.3 绑定到元组和类元组</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81C-20"><span class="nav-text">三、C++ 20</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYUxvbmctS2FuZw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmtqaWFsb25nQDE2My5jb20=" title="E-Mail → mailto:kjialong@163.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <span class="exturl" data-url="aHR0cHM6Ly9jb29sc2hlbGwuY24=" title="https:&#x2F;&#x2F;coolshell.cn">左耳朵耗子</span>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/C-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++ 结构化绑定 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 结构化绑定
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-05-10 11:00:00" itemprop="dateCreated datePublished" datetime="2025-05-10T11:00:00+08:00">2025-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-10-03 01:28:34" itemprop="dateModified" datetime="2025-10-03T01:28:34+08:00">2025-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-plus-plus/" itemprop="url" rel="index"><span itemprop="name">C plus plus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>33 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="一、结构化绑定"><a href="#一、结构化绑定" class="headerlink" title="一、结构化绑定"></a>一、结构化绑定</h1><h2 id="1-1-引子"><a href="#1-1-引子" class="headerlink" title="1.1 引子"></a>1.1 引子</h2><p>在 C++中，如果一个函数需要返回<strong>两个值</strong>，我们可以使用<code>std::pair</code> 。例如：有个函数查找并返回一个整数数组的最小值和最大值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::pair&lt;<span class="type">int</span>, <span class="type">int</span>&gt; <span class="title">findMinMax</span><span class="params">(<span class="type">const</span> std::vector&lt;<span class="type">int</span>&gt; &amp;numbers)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (numbers.<span class="built_in">empty</span>()) <span class="keyword">return</span> &#123;<span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> min = numbers[<span class="number">0</span>];</span><br><span class="line">    <span class="type">int</span> max = numbers[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> num: numbers)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (num &lt; min) min = num;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (num &gt; max) max = num;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;min, max&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们有多种方法可以获取<code>std::pair</code>中的参数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; data = &#123;<span class="number">42</span>, <span class="number">17</span>, <span class="number">89</span>, <span class="number">3</span>, <span class="number">56</span>, <span class="number">21</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法一 </span></span><br><span class="line"><span class="keyword">auto</span> r = <span class="built_in">findMinMax</span>(data);</span><br><span class="line"><span class="type">int</span> min = r.first;</span><br><span class="line"><span class="type">int</span> max = r.second;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法二</span></span><br><span class="line"><span class="keyword">auto</span> r = <span class="built_in">findMinMax</span>(data);</span><br><span class="line"><span class="type">int</span> min = std::<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(r);</span><br><span class="line"><span class="type">int</span> max = std::<span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(r);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法三</span></span><br><span class="line"><span class="type">int</span> min, max;</span><br><span class="line">std::<span class="built_in">tie</span>(min, max) = <span class="built_in">findMinMax</span>(data);</span><br></pre></td></tr></table></figure>
+
+<p>我们发现虽然有多种方法可以获取<code>std::pair</code>中的参数，但是都有如下问题：1. 代码不够简洁  2. 可读性较差。在<code>C++ 17</code>中可以通过结构化绑定一行代码搞定：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> [min, max] = <span class="built_in">findMinMax</span>(data);</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<h2 id="1-2-结构化绑定是什么"><a href="#1-2-结构化绑定是什么" class="headerlink" title="1.2 结构化绑定是什么"></a>1.2 结构化绑定是什么</h2><p><code>C++17</code>标准中引入了结构化绑定，即将指定的标识符绑定到初始化的子对象或元素上，相当于给初始化的子对象（或者元素）起了别名。注意别名不同于引用，后文会详细讲解它们区别。结构化绑定为我们提供了一种更简单、更直观的方式来操作复合数据类型。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">decl-specifier ref-<span class="built_in">qualifier</span>(optional) [ identifier-list ] = expression;</span><br><span class="line">decl-specifier ref-<span class="built_in">qualifier</span>(optional) [ identifier-list ] &#123; expression &#125;;</span><br><span class="line">decl-specifier ref-<span class="built_in">qualifier</span>(optional) [ identifier-list ] ( expression );</span><br></pre></td></tr></table></figure>
+
+<p>各部分说明：</p>
+<p>decl-specifier :  修饰符，可选的有<code>const</code>、<code>volatile</code>、<code>static</code>、<code>thread_local</code>，必选的为<code>auto</code></p>
+<p>ref-qualifier：<code>&amp;</code>或<code>&amp;&amp;</code>，可选，表示左值引用或万能引用</p>
+<p>identifier-list：用逗号分隔的标识符列表，标识符在绑定语句所在的作用域内可见</p>
+<p>expression：表达式</p>
+<p>下面有一个嵌套<code>std::map</code>，外层表示学校与班级，内层表示班级与学生人数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 嵌套 map：学校 -&gt; 班级 -&gt; 学生人数</span></span><br><span class="line">std::map&lt;std::string, std::map&lt;std::string, <span class="type">int</span>&gt;&gt; schools&#123;</span><br><span class="line">    &#123;<span class="string">&quot;HighSchoolA&quot;</span>, &#123;&#123;<span class="string">&quot;Class1&quot;</span>, <span class="number">35</span>&#125;, &#123;<span class="string">&quot;Class2&quot;</span>, <span class="number">30</span>&#125;&#125;&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;HighSchoolB&quot;</span>, &#123;&#123;<span class="string">&quot;Class1&quot;</span>, <span class="number">28</span>&#125;, &#123;<span class="string">&quot;Class2&quot;</span>, <span class="number">32</span>&#125;, &#123;<span class="string">&quot;Class3&quot;</span>, <span class="number">26</span>&#125;&#125;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 外层遍历学校</span></span><br><span class="line"><span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> &amp;[school, classes]: schools) <span class="comment">// 将key绑定给标识符school, 将val绑定给标识符classes。由于不希望拷贝和修改，使用 const &amp; 修饰</span></span><br><span class="line">&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;School: &quot;</span> &lt;&lt; school &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 内层遍历班级</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> &amp;[className, studentCount]: classes) <span class="comment">// 将key绑定给标识符className, 将val绑定给标识符studentCount。由于不希望拷贝和修改，使用 const &amp; 修饰</span></span><br><span class="line">    &#123;</span><br><span class="line">      	std::cout &lt;&lt; <span class="string">&quot;  &quot;</span> &lt;&lt; className &lt;&lt; <span class="string">&quot; has &quot;</span> &lt;&lt; studentCount &lt;&lt; <span class="string">&quot; students.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-深入理解结构化绑定"><a href="#1-3-深入理解结构化绑定" class="headerlink" title="1.3 深入理解结构化绑定"></a>1.3 深入理解结构化绑定</h2><h3 id="1-3-1-绑定是什么"><a href="#1-3-1-绑定是什么" class="headerlink" title="1.3.1 绑定是什么"></a>1.3.1 绑定是什么</h3><p>在<em>1.2</em>节中我们提到结构化绑定就是将指定的标识符绑定到初始化的子对象上，等同于子对象的别名。下面通过两个示例来理解这句话。</p>
+<p>示例一</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;std::string, <span class="type">int</span>&gt; person = std::<span class="built_in">make_pair</span>(<span class="string">&quot;小明&quot;</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> [name, age] = person;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;person.age&quot;</span> &lt;&lt; person.second &lt;&lt; <span class="string">&quot; &amp;person.age=&quot;</span> &lt;&lt; &amp;person.second &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;age&quot;</span> &lt;&lt; age &lt;&lt; <span class="string">&quot; &amp;age=&quot;</span> &lt;&lt; &amp;age &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">age = <span class="number">20</span>;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;修改后&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;person.age&quot;</span> &lt;&lt; person.second &lt;&lt; <span class="string">&quot; &amp;person.age=&quot;</span> &lt;&lt; &amp;person.second &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;age&quot;</span> &lt;&lt; age &lt;&lt; <span class="string">&quot; &amp;age=&quot;</span> &lt;&lt; &amp;age &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">person.age18 &amp;person.age=<span class="number">0x16d8bf048</span></span><br><span class="line">age18 &amp;age=<span class="number">0x16d8bf010</span></span><br><span class="line">修改后</span><br><span class="line">person.age18 &amp;person.age=<span class="number">0x16d8bf048</span></span><br><span class="line">age20 &amp;age=<span class="number">0x16d8bf010</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到修改<em>age</em>并不会影响<em>person.age</em>，而且它们内存地址是不一样。<strong>即编译器发现<code>auto</code>后面没有<code>&amp;</code>或<code>&amp;&amp;</code>时，会创建一个person对象的副本（匿名对象），然后将name与age绑定到这个匿名对象上</strong>。伪代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;std::string, <span class="type">int</span>&gt; person = std::<span class="built_in">make_pair</span>(<span class="string">&quot;小明&quot;</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> anonymous = person; <span class="comment">// 参考person创建的匿名对象</span></span><br><span class="line">aliasname name = anonymous.name; <span class="comment">// aliasname这里表示别名，而不是引用</span></span><br><span class="line">aliasname age = anonymous.age;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>示例二</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;std::string, <span class="type">int</span>&gt; person = std::<span class="built_in">make_pair</span>(<span class="string">&quot;小明&quot;</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> &amp;[name, age] = person;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;person.age&quot;</span> &lt;&lt; person.second &lt;&lt; <span class="string">&quot; &amp;person.age=&quot;</span> &lt;&lt; &amp;person.second &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;age&quot;</span> &lt;&lt; age &lt;&lt; <span class="string">&quot; &amp;age=&quot;</span> &lt;&lt; &amp;age &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">age = <span class="number">20</span>;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;修改后&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;person.age&quot;</span> &lt;&lt; person.second &lt;&lt; <span class="string">&quot; &amp;person.age=&quot;</span> &lt;&lt; &amp;person.second &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;age&quot;</span> &lt;&lt; age &lt;&lt; <span class="string">&quot; &amp;age=&quot;</span> &lt;&lt; &amp;age &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">person.age18 &amp;person.age=<span class="number">0x16b8c3048</span></span><br><span class="line">age18 &amp;age=<span class="number">0x16b8c3048</span></span><br><span class="line">修改后</span><br><span class="line">person.age20 &amp;person.age=<span class="number">0x16b8c3048</span></span><br><span class="line">age20 &amp;age=<span class="number">0x16b8c3048</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到修改<em>age</em>会影响<em>person.age</em>且它们内存地址一样。<strong>即编译器发现<code>auto</code>后面有<code>&amp;</code>或<code>&amp;&amp;</code>时，不会创建匿名对象而是直接将name与age绑定到person对象上</strong>。伪代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;std::string, <span class="type">int</span>&gt; person = std::<span class="built_in">make_pair</span>(<span class="string">&quot;小明&quot;</span>, <span class="number">18</span>);</span><br><span class="line"></span><br><span class="line">aliasname name = person.name;  <span class="comment">// aliasname这里表示别名，而不是引用</span></span><br><span class="line">aliasname age = person.age;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-2-子对象别名是什么"><a href="#1-3-2-子对象别名是什么" class="headerlink" title="1.3.2 子对象别名是什么"></a>1.3.2 子对象别名是什么</h3><p>对于标识符等同于子对象别名又该如何理解呢？可以看下面代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">std::pair&lt;std::string, <span class="type">int</span>&gt; person = std::<span class="built_in">make_pair</span>(<span class="string">&quot;小明&quot;</span>, <span class="number">18</span>);</span><br><span class="line"><span class="keyword">auto</span> &amp;[name, age] = person;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;&amp;person.name=&quot;</span> &lt;&lt; &amp;person.first &lt;&lt; <span class="string">&quot; &amp;person.age&quot;</span> &lt;&lt; &amp;person.second &lt;&lt; <span class="string">&quot; &amp;name=&quot;</span> </span><br><span class="line">  &lt;&lt; &amp;name &lt;&lt; <span class="string">&quot; &amp;age=&quot;</span> &lt;&lt; &amp;age &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;std::string, decltype(person.name)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;std::string, <span class="keyword">decltype</span>(person.first)&gt; &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;int, decltype(person.age)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;<span class="type">int</span>, <span class="keyword">decltype</span>(person.second)&gt; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;std::string, decltype(name)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;std::string, <span class="keyword">decltype</span>(name)&gt; &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;int, decltype(age)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;<span class="type">int</span>, <span class="keyword">decltype</span>(age)&gt; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;std::string&amp;, decltype(name)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;std::string &amp;, <span class="keyword">decltype</span>(name)&gt; &lt;&lt; std::endl;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;std::is_same_v&lt;int&amp;, decltype(age)=&quot;</span></span><br><span class="line">  &lt;&lt; std::is_same_v&lt;<span class="type">int</span> &amp;, <span class="keyword">decltype</span>(age)&gt; &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&amp;person.name=<span class="number">0x16b977030</span> &amp;person.age0x16b977048 &amp;name=<span class="number">0x16b977030</span> &amp;age=<span class="number">0x16b977048</span></span><br><span class="line">std::is_same_v&lt;std::string, <span class="keyword">decltype</span>(person.name)=<span class="number">1</span></span><br><span class="line">std::is_same_v&lt;<span class="type">int</span>, <span class="keyword">decltype</span>(person.age)=<span class="number">1</span></span><br><span class="line">std::is_same_v&lt;std::string, <span class="keyword">decltype</span>(name)=<span class="number">1</span></span><br><span class="line">std::is_same_v&lt;<span class="type">int</span>, <span class="keyword">decltype</span>(age)=<span class="number">1</span></span><br><span class="line">std::is_same_v&lt;std::string&amp;, <span class="keyword">decltype</span>(name)=<span class="number">0</span></span><br><span class="line">std::is_same_v&lt;<span class="type">int</span>&amp;, <span class="keyword">decltype</span>(age)=<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到这里的别名就是单纯别名，别名的类型和绑定目标对象的子对象类型相同，而不是子对象的引用类型。</strong></p>
+<h3 id="1-3-3-绑定不能忽略部分子对象"><a href="#1-3-3-绑定不能忽略部分子对象" class="headerlink" title="1.3.3 绑定不能忽略部分子对象"></a>1.3.3 绑定不能忽略部分子对象</h3><p>学生信息由学号、姓名、性别、年龄、班级五部分组成，并通过<code>std::tuple</code>存储，现需要打印学号和姓名，可以使用<code>std::tie</code>配合<code>std::ignore</code>轻松完成，如果使用结构化绑定，则不支持忽略部分子对象。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::tuple&lt;<span class="type">int</span>, std::string, <span class="type">char</span>, <span class="type">int</span>, std::string&gt; student = &#123;<span class="number">202501</span>, <span class="string">&quot;张三&quot;</span>, <span class="string">&#x27;M&#x27;</span>, <span class="number">18</span>, <span class="string">&quot;class A&quot;</span>&#125;;</span><br><span class="line"><span class="type">int</span> id;</span><br><span class="line">std::string name;</span><br><span class="line">std::<span class="built_in">tie</span>(id, name, std::ignore, std::ignore, std::ignore) = student;</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;id=&quot;</span> &lt;&lt; id &lt;&lt; <span class="string">&quot; name=&quot;</span> &lt;&lt; name &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; [id, name, std::ignore, std::ignore, std::ignore] = student; <span class="comment">// 编译失败</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>我们可以通过给不需要的子对象用”占位标识符“来模拟忽略效果，但需确保这个“占位标识符”在当前作用域不会再被使用到</strong>。注意：这种方式也是将子对象绑定到标识符上，只是后面不使用这个标识符，并且在当前作用域中“占位标识符”不能相同。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="keyword">auto</span>&amp; [id, name, _p1, _p2, _p3] = student;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、可绑定的类型"><a href="#二、可绑定的类型" class="headerlink" title="二、可绑定的类型"></a>二、可绑定的类型</h1><p>结构化绑定可以作用于3种类型，包括原生数组、结构体和类对象、元组和类元组的对象。</p>
+<h2 id="2-1-绑定到原生数组"><a href="#2-1-绑定到原生数组" class="headerlink" title="2.1 绑定到原生数组"></a>2.1 绑定到原生数组</h2><p>绑定到原生数组所需条件最简单，标识符的数量等于数组的元素个数。需要注意的是，编译器必须知道原生数组的元素个数，如果数组名退化为指针，则会绑定失败。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> arr[<span class="number">3</span>] = &#123;<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>&#125;;</span><br><span class="line"><span class="keyword">auto</span> [x, y, z] = arr;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> *p = arr;</span><br><span class="line"><span class="keyword">auto</span> [a, b, c] = p; <span class="comment">// 编译错误，编译器无法获取到p指向的数组元素个数</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-绑定到结构体和类对象"><a href="#2-2-绑定到结构体和类对象" class="headerlink" title="2.2 绑定到结构体和类对象"></a>2.2 绑定到结构体和类对象</h2><p>绑定到结构体和类对象有如下限制条件：</p>
+<ol>
+<li><p>结构体(或类)中的非静态成员变量个数必须和标识符列表中标识符的个数相同</p>
+</li>
+<li><p>非静态成员变量访问权限必须为<code>public</code> (C++20 放宽了该限制规则)</p>
+</li>
+<li><p>非静态成员变量必须在当前类或基类中</p>
+</li>
+<li><p>结构体(或类)中不能有匿名联合体</p>
+</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">    <span class="type">int</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A obj;</span><br><span class="line">    <span class="keyword">auto</span> &amp;[x, y] = obj;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码会编译失败，因为<em>类A</em>的非静态成员变量为<code>private</code>，违反限制条件2。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">    <span class="type">int</span> _b;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> _num = <span class="number">2</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A obj;</span><br><span class="line">    <span class="keyword">auto</span> &amp;[x] = obj;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码会编译失败，因为<em>类A</em>的非静态成员变量有2个，而标识符只有1个，违反限制条件1。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base1</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">    <span class="type">double</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span> : <span class="keyword">public</span> Base1</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base2</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span> : <span class="keyword">public</span> Base2</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line">    <span class="type">double</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base3</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">		<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived3</span> : <span class="keyword">public</span> Base3</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">		<span class="type">double</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Derived1 d1;</span><br><span class="line">    Derived2 d2;</span><br><span class="line">    Derived3 d3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span>[x1, y1] = d1; </span><br><span class="line">    <span class="keyword">auto</span>[x2, y2] = d2; </span><br><span class="line">    <span class="keyword">auto</span>[x3, y3] = d3; <span class="comment">// 编译失败</span></span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<em>d1</em>与<em>d2</em>结构化绑定成功，因为非静态成员变量都在当前类或基类中。<em>d3</em>结构化绑定失败是因为非静态成员变量在当前类与基类中都有定义，违反限制条件3。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> common_data;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 匿名联合体</span></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">int</span> int_value;</span><br><span class="line">      <span class="type">double</span> double_value;</span><br><span class="line">      <span class="type">char</span> char_value;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    std::string name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A obj;</span><br><span class="line">    obj.common_data = <span class="number">2025</span>;</span><br><span class="line">    obj.int_value = <span class="number">100</span>;</span><br><span class="line">    obj.name = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> [common, value, name] = obj;  <span class="comment">// 编译错误</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码会编译失败，因为<em>类A</em>中有匿名联合体，违反限制条件4。</p>
+<h2 id="2-3-绑定到元组和类元组"><a href="#2-3-绑定到元组和类元组" class="headerlink" title="2.3 绑定到元组和类元组"></a>2.3 绑定到元组和类元组</h2><p>在上文的示例中已经演示过结构化绑定到<code>std::tuple</code>中 ，即将标识符列表中的标识符分别绑定到元组对象的各个子元素中。那么绑定到类元祖是什么意思呢？有些细心读者注意到上文中已使用结构化绑定到<code>std::pair</code>，但<code>std::pair</code>并不是元祖类型。接下来让迷雾揭晓。</p>
+<p><strong>类元祖是指那些不是元组类型，但实现了像<code>std::tuple</code>中为支持结构化绑定一系列限制条件的类型</strong>。例如<code>std::pair</code>就是一个类元祖。</p>
+<p>限制条件：对于元祖或类元祖类型T，需要满足以下条件</p>
+<ol>
+<li><p><code>std::tuple_size&lt;T&gt;::value</code>是一个符合语法的表达式，并且该表达式获得的整数值与标识符列表中的标识符个数相同</p>
+</li>
+<li><p><code>std::tuple_element&lt;i, T&gt;::type</code>是一个符合语法的表达式，其中<em>i</em>是小于<code>std::tuple_size&lt;T&gt;::value</code>的整数，表示类型T中第i个元素的类型</p>
+</li>
+<li><p>类型T必须存在合法的成员函数模板<code>get&lt;i&gt;()</code>或者函数模板<code>get&lt;i&gt;(t)</code>，其中i是小于<code>std::tuple_size&lt;T&gt;::value</code>的整数，t是类型T的实例化对象，返回的是实例t中第i个元素的值。</p>
+</li>
+</ol>
+<p>在<em>2.2</em>节中对于<em>Derived3</em>，由于它的非静态成员变量分散在基类与派生类之间，所以不支持结构化绑定，下面将通过让其满足类元组的条件，从而达到支持结构化绑定的目的：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base3</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived3</span> : <span class="keyword">public</span> Base3</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="type">double</span> _b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> std</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器将要绑定的子对象个数，满足条件1</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_size</span>&lt;Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">size_t</span> value = <span class="number">2</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器每个子对象类型，满足条件2</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">0</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">int</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">1</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">double</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取第i个元素的值。满足条件3</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;std::<span class="type">size_t</span> Idx&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> &amp;<span class="title">get</span><span class="params">(Derived3 &amp;obj)</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">auto</span> &amp;<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(Derived3 &amp;obj) &#123; <span class="keyword">return</span> obj._a; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;&gt;</span><br><span class="line"><span class="keyword">auto</span> &amp;<span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(Derived3 &amp;obj) &#123; <span class="keyword">return</span> obj._b; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Derived3 d3;</span><br><span class="line">    <span class="keyword">auto</span> &amp;[x3, y3] = d3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>get</em>函数实现有两种，一种是作为类的成员函数，一种是函数摸板。上文中是通过函数摸板方式，并且返回的是子对象的引用，所以需要使用<code>auto &amp;[x3, y3] = d3;</code>，如果使用<code>auto [x3, y3] = d3;</code>则会编译错误。并通过<code>=delete</code>明确告诉编译器不要生成除了特化版本以外的函数，防止<em>get</em>函数模板被滥用。下文展示将<em>get</em>作为类的成员函数的方案。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base3</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">		<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived3</span> : <span class="keyword">public</span> Base3</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> _b;</span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 获取第i个元素的值。满足条件3</span></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;std::<span class="type">size_t</span> Idx&gt; <span class="keyword">auto</span>&amp; <span class="title">get</span><span class="params">()</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line">    <span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span>&amp; <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;() &#123; <span class="keyword">return</span> _a; &#125;</span><br><span class="line">    <span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span>&amp; <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;() &#123; <span class="keyword">return</span> _b; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> std</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器将要绑定的子对象个数</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_size</span>&lt;Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">size_t</span> value = <span class="number">2</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器每个子对象类型</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">0</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">int</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">1</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">double</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、C-20"><a href="#三、C-20" class="headerlink" title="三、C++ 20"></a>三、C++ 20</h1><p>在<em>2.2</em>节中提到，非静态成员变量访问权限必须为<code>public</code> 。这个限制乍看是合理的，但是在某些场景下是不合理的。例如下面代码中，<em>tes</em>t函数是类A的友元函数，可以访问类A私有成员变量*_a*，但是不能结构化绑定，这个就不合理了。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">		<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    <span class="keyword">auto</span> x = a._a;</span><br><span class="line">    <span class="keyword">auto</span> [y] = a; <span class="comment">// 违反限制条件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>另外，同样问题还出现在类的成员函数想结构化绑定自身的时候：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> _a;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">      <span class="keyword">auto</span> [x] = *<span class="keyword">this</span>; <span class="comment">// 违反限制条件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>为了解决这类问题，<strong><code>C++20</code>标准规定结构化绑定的限制不再强调类的非静态成员变量必须为<code>public</code>访问权限，而是由编译器根据当前上下文判断是否允许绑定</strong>。</p>
+<p>说明： 在<code>clang</code> 编译器中测试不管是使用<code>C++ 17</code>还是<code>C++ 20</code>标准，上述代码都能编译运行成功。</p>
+<p>总结：结构化绑定在许多情况下为我们编写代码提供了极大的便利，通过结构化绑定可以使代码更简洁、可读性更高，很方便从复杂类型中提取子对象并赋予有意义标识符名称。但是它也有一些缺点，例如无法应用于动态数据结构，如<code>std::vector</code>。并且可能带来命名空间污染，不支持忽略部分子对象等。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>谢丙堃 &lt;&lt;现代C++语言核心特性解析&gt;&gt;</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/C-%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A.html" title="C++ 结构化绑定">https://blog.kjlcloud.com/C-结构化绑定.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C-17/" rel="tag"># C++ 17</a>
+              <a href="/tags/C-20/" rel="tag"># C++ 20</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/C-C-%E4%B8%80%E6%AC%A1%E6%A0%88%E5%8C%BA%E4%BD%BF%E7%94%A8%E5%A4%A7%E6%95%B0%E7%BB%84%E5%BC%95%E5%8F%91%E7%9A%84%E6%AE%B5%E9%94%99%E8%AF%AF.html" rel="prev" title="C/C++ 一次栈区使用大数组引发的段错误">
+                  <i class="fa fa-angle-left"></i> C/C++ 一次栈区使用大数组引发的段错误
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">145k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">24:07</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
