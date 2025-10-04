@@ -29,7 +29,7 @@
 <meta property="og:description" content="一、结构化绑定1.1 引子在 C++中，如果一个函数需要返回两个值，我们可以使用std::pair 。例如：有个函数查找并返回一个整数数组的最小值和最大值。 12345678910111213141516std::pair&lt;int, int&gt; findMinMax(const std::vector&lt;int&gt; &amp;numbers)&#123;    if (numbe">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-05-10T03:00:00.000Z">
-<meta property="article:modified_time" content="2025-10-02T17:28:34.732Z">
+<meta property="article:modified_time" content="2025-10-02T17:30:37.704Z">
 <meta property="article:author" content="JiaLong Kang">
 <meta property="article:tag" content="C++ 17">
 <meta property="article:tag" content="C++ 20">
@@ -92,7 +92,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">31</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">49</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">31</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">50</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
         </a>
@@ -158,7 +158,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">50</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -257,7 +257,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-10-03 01:28:34" itemprop="dateModified" datetime="2025-10-03T01:28:34+08:00">2025-10-03</time>
+      <time title="Modified: 2025-10-03 01:30:37" itemprop="dateModified" datetime="2025-10-03T01:30:37+08:00">2025-10-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -400,7 +400,7 @@
 <p><em>get</em>函数实现有两种，一种是作为类的成员函数，一种是函数摸板。上文中是通过函数摸板方式，并且返回的是子对象的引用，所以需要使用<code>auto &amp;[x3, y3] = d3;</code>，如果使用<code>auto [x3, y3] = d3;</code>则会编译错误。并通过<code>=delete</code>明确告诉编译器不要生成除了特化版本以外的函数，防止<em>get</em>函数模板被滥用。下文展示将<em>get</em>作为类的成员函数的方案。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base3</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">		<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived3</span> : <span class="keyword">public</span> Base3</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> _b;</span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 获取第i个元素的值。满足条件3</span></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;std::<span class="type">size_t</span> Idx&gt; <span class="keyword">auto</span>&amp; <span class="title">get</span><span class="params">()</span> </span>= <span class="keyword">delete</span>;</span><br><span class="line">    <span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span>&amp; <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;() &#123; <span class="keyword">return</span> _a; &#125;</span><br><span class="line">    <span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span>&amp; <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;() &#123; <span class="keyword">return</span> _b; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> std</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器将要绑定的子对象个数</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_size</span>&lt;Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">size_t</span> value = <span class="number">2</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过模版特化告诉编译器每个子对象类型</span></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">0</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">int</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;&gt;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">tuple_element</span>&lt;<span class="number">1</span>, Derived3&gt;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">using</span> type = <span class="type">double</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h1 id="三、C-20"><a href="#三、C-20" class="headerlink" title="三、C++ 20"></a>三、C++ 20</h1><p>在<em>2.2</em>节中提到，非静态成员变量访问权限必须为<code>public</code> 。这个限制乍看是合理的，但是在某些场景下是不合理的。例如下面代码中，<em>tes</em>t函数是类A的友元函数，可以访问类A私有成员变量*_a*，但是不能结构化绑定，这个就不合理了。</p>
+<h1 id="三、C-20"><a href="#三、C-20" class="headerlink" title="三、C++ 20"></a>三、C++ 20</h1><p>在<em>2.2</em>节中提到，非静态成员变量访问权限必须为<code>public</code> 。这个限制乍看是合理的，但是在某些场景下是不合理的。例如下面代码中，<em>test</em>函数是类A的友元函数，可以访问类A私有成员变量_a，但是不能结构化绑定，这个就不合理了。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line">		<span class="function"><span class="keyword">friend</span> <span class="type">void</span> <span class="title">test</span><span class="params">()</span></span>;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">		<span class="type">int</span> _a;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">    <span class="keyword">auto</span> x = a._a;</span><br><span class="line">    <span class="keyword">auto</span> [y] = a; <span class="comment">// 违反限制条件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -468,6 +468,9 @@
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/C-17-%E5%B7%A5%E5%85%B7%E7%B1%BBoptional%E3%80%81variant%E3%80%81any.html" rel="next" title="C++17 工具类optional、variant、any">
+                  C++17 工具类optional、variant、any <i class="fa fa-angle-right"></i>
+                </a>
             </div>
           </div>
     </footer>
@@ -505,14 +508,14 @@
       <i class="fa fa-chart-line"></i>
     </span>
       <span>Word count total: </span>
-    <span title="Word count total">145k</span>
+    <span title="Word count total">148k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span>Reading time total &asymp;</span>
-    <span title="Reading time total">24:07</span>
+    <span title="Reading time total">24:41</span>
   </span>
 </div>
   <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
