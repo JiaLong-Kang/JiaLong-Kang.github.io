@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="arB0oQZ5Q_2XiRgbMUG2pJOod1NKEmWD9E2-BfBA0Eo">
+  <meta name="baidu-site-verification" content="codeva-HfmgMGHhUU">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.kjlcloud.com","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.22.0","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"giscus","storage":true,"lazyload":true,"nav":null,"activeClass":"giscus"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、值类别1.1 值类别是什么在 C++ 中，表达式是由一个或多个操作数（operands）和零个或多个运算符（operators）组成的语法单元，每个表达式都会生成一个值，每个值有两种属性：类型与值类别。类型有int、double等内置类型，也有用户自定义类型。值类别是指按是否可标识与是否可移动两个独立属性对值进行分类。 C++ 语言及其工具和规则的许多方面都需要正确理解这些值类别以及对它们的引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 深入理解右值引用与移动语义">
+<meta property="og:url" content="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89.html">
+<meta property="og:site_name" content="四季">
+<meta property="og:description" content="一、值类别1.1 值类别是什么在 C++ 中，表达式是由一个或多个操作数（operands）和零个或多个运算符（operators）组成的语法单元，每个表达式都会生成一个值，每个值有两种属性：类型与值类别。类型有int、double等内置类型，也有用户自定义类型。值类别是指按是否可标识与是否可移动两个独立属性对值进行分类。 C++ 语言及其工具和规则的许多方面都需要正确理解这些值类别以及对它们的引">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/C++%E5%80%BC%E7%B1%BB%E5%88%AB.png">
+<meta property="article:published_time" content="2025-06-15T06:33:00.000Z">
+<meta property="article:modified_time" content="2025-10-09T01:16:45.985Z">
+<meta property="article:author" content="JiaLong Kang">
+<meta property="article:tag" content="C++ 11">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89/C++%E5%80%BC%E7%B1%BB%E5%88%AB.png">
+
+
+<link rel="canonical" href="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89.html","path":"C-深入理解右值引用与移动语义.html","title":"C++ 深入理解右值引用与移动语义"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>C++ 深入理解右值引用与移动语义 | 四季</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="四季" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">四季</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Seasons</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">31</span></a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">11</span></a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">51</span></a></li><li class="menu-item menu-item-guestbook"><a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>Guestbook</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%80%BC%E7%B1%BB%E5%88%AB"><span class="nav-text">一、值类别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-%E5%80%BC%E7%B1%BB%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">1.1 值类别是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-C-98-03"><span class="nav-text">1.2 C++ 98&#x2F;03</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-C-11"><span class="nav-text">1.3 C++11</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-%E5%B7%A6%E5%80%BC%E3%80%81%E5%B0%86%E4%BA%A1%E5%80%BC%E3%80%81%E7%BA%AF%E5%8F%B3%E5%80%BC"><span class="nav-text">1.3.1 左值、将亡值、纯右值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-2-%E6%B3%9B%E5%B7%A6%E5%80%BC%E4%B8%8E%E5%8F%B3%E5%80%BC"><span class="nav-text">1.3.2 泛左值与右值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">二、左值引用与右值引用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-%E5%B7%A6%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">2.1 左值引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">2.2  右值引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-%E4%B8%BA%E4%BD%95%E9%9C%80%E8%A6%81%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8"><span class="nav-text">2.3 为何需要右值引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="nav-text">三、移动语义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89"><span class="nav-text">3.1 为什么需要移动语义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E7%A7%BB%E5%8A%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-text">3.2 移动构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E7%A7%BB%E5%8A%A8%E8%B5%8B%E5%80%BC"><span class="nav-text">3.3 移动赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-%E5%BC%82%E5%B8%B8%E5%AE%89%E5%85%A8%E6%80%A7"><span class="nav-text">3.4 异常安全性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="JiaLong Kang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">JiaLong Kang</p>
+  <div class="site-description" itemprop="description">和你再干一杯，岁岁和年年🍻</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ppYUxvbmctS2FuZw==" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JiaLong-Kang"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmtqaWFsb25nQDE2My5jb20=" title="E-Mail → mailto:kjialong@163.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          Links
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <span class="exturl" data-url="aHR0cHM6Ly9jb29sc2hlbGwuY24=" title="https:&#x2F;&#x2F;coolshell.cn">左耳朵耗子</span>
+            </li>
+        </ul>
+      </div>
+    </div>
+        <div class="pjax">
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="JiaLong Kang">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="四季">
+      <meta itemprop="description" content="和你再干一杯，岁岁和年年🍻">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="C++ 深入理解右值引用与移动语义 | 四季">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 深入理解右值引用与移动语义
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-06-15 14:33:00" itemprop="dateCreated datePublished" datetime="2025-06-15T14:33:00+08:00">2025-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-10-09 09:16:45" itemprop="dateModified" datetime="2025-10-09T09:16:45+08:00">2025-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C-plus-plus/" itemprop="url" rel="index"><span itemprop="name">C plus plus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span class="firestore-visitors-count"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>38 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="一、值类别"><a href="#一、值类别" class="headerlink" title="一、值类别"></a>一、值类别</h1><h2 id="1-1-值类别是什么"><a href="#1-1-值类别是什么" class="headerlink" title="1.1 值类别是什么"></a>1.1 值类别是什么</h2><p>在 C++ 中，<strong>表达式是由一个或多个操作数（operands）和零个或多个运算符（operators）组成的语法单元，每个表达式都会生成一个值，每个值有两种属性：类型与值类别</strong>。类型有<code>int</code>、<code>double</code>等内置类型，也有用户自定义类型。<strong>值类别是指按是否可标识与是否可移动两个独立属性对值进行分类。</strong> C++ 语言及其工具和规则的许多方面都需要正确理解这些值类别以及对它们的引用。 这些方面包括获取值的地址、复制值、移动值、将值转发给另一函数。</p>
+<h2 id="1-2-C-98-03"><a href="#1-2-C-98-03" class="headerlink" title="1.2 C++ 98&#x2F;03"></a>1.2 C++ 98&#x2F;03</h2><p><strong><code>C++ 98/03</code>依据是否可标识将值类别分为左值与右值两种。这里的左与右是指是否可出现在赋值运算符的左边与右边。但这只是最简单字面意思，实际区分左值与右值是通过是否可标识</strong>。</p>
+<p> 左值(lvalue)：一个指向特定内存的具有标识的值（具名对象），它有一个相对稳定的内存地址，并有较长生命周期。命名的变量或常量，返回左值引用的函数都是左值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> global_var = <span class="number">2025</span>; <span class="comment">// 左值</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> &amp;<span class="title">get_val</span><span class="params">()</span> <span class="comment">// 左值，返回引用类型</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> global_var;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">10</span>; <span class="comment">// 左值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p>右值(rvalue)：一个不指向特定内存的没有标识的值（匿名对象），或一个字面量(不包括字符串字面量)。它的生命周期较短，通常是临时性的。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">get_val</span><span class="params">()</span> <span class="comment">// 右值，函数返回时会将global_var拷贝给一个临时变量</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  	<span class="keyword">return</span> global_var;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="number">2025</span>; <span class="comment">// 字面量，右值</span></span><br><span class="line">    <span class="number">3.14</span>; <span class="comment">// 字面量, 右值</span></span><br><span class="line">    <span class="type">char</span> * p = <span class="string">&quot;hello&quot;</span>; <span class="comment">// &quot;hello&quot; 是一个字符串字面量，它有特定内存地址，是一个左值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明：前置++或前置–返回的是一个左值，它将当前对象自增或自减后返回，所以可以对它取地址。后置++或后置–返回的是一个右值，它先将当前对象的值赋值给一个临时对象，然后自增或自减后返回临时对象，所以不能对它取地址。</p>
+<h2 id="1-3-C-11"><a href="#1-3-C-11" class="headerlink" title="1.3 C++11"></a>1.3 C++11</h2><h3 id="1-3-1-左值、将亡值、纯右值"><a href="#1-3-1-左值、将亡值、纯右值" class="headerlink" title="1.3.1 左值、将亡值、纯右值"></a>1.3.1 左值、将亡值、纯右值</h3><p><code>C++ 11</code>为支持<strong>移动语义</strong>与<strong>完美转发</strong>，依据是否可标识与是否可移动两个独立属性将值类别分为以下三种基本类别之一：<strong>左值（lvalue）</strong>，<strong>将亡值（xvalue）<strong>以及</strong>纯右值（prvalue）</strong>。其中左值与纯右值定义类似于C++11之前的定义。</p>
+<p><strong>左值(lvalue)</strong>：一个可标识，但不可移动的值。 </p>
+<p>特征：</p>
+<ul>
+<li>有特定的内存地址的可标识的值，可以取地址。</li>
+<li>可以出现在赋值语句的左边或右边。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;   <span class="comment">// x是左值，因为它有标识符并且可以被取地址的变量</span></span><br><span class="line"><span class="type">int</span> *ptr = &amp;x; <span class="comment">// ptr是一个左值，因为它有标识符并且可以被取地址的变量</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> y = <span class="number">3</span>; <span class="comment">// y为左值，但被const修饰，不能修改</span></span><br><span class="line"><span class="type">char</span>* c_ptr = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 左值，指向字符串第一个字符的地址</span></span><br><span class="line"></span><br><span class="line">++x; <span class="comment">// 左值</span></span><br><span class="line">--x; <span class="comment">// 左值</span></span><br><span class="line"><span class="type">int</span> y = x; <span class="comment">// 左值</span></span><br><span class="line">*ptr = <span class="number">2025</span>; <span class="comment">// 左值，解引用访问x</span></span><br><span class="line">A a; <span class="comment">// 左值</span></span><br><span class="line"><span class="string">&quot;hello&quot;</span>; <span class="comment">//左值, 存储在静态区只读数据段中</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>将亡值(xvalue)</strong>：一个可标识，可移动的值，顾名思义该对象即将消亡，可以将该对象资源移动走。</p>
+<p>特征：</p>
+<ul>
+<li>一个可标识符的值，它代表一个对象或者具体的内存位置，可以取地址。</li>
+<li>可以出现在赋值语句的左边或右边。</li>
+<li>对象资源即将被析构。</li>
+</ul>
+<p>将亡值可以是以前的某个左值。由于复制开销很高，决定移动此左值。一旦为将亡值，则应承诺后续不再使用它，因为它的资源可能被移动走了。 下面演示如何将左值转换为将亡值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123; ... &#125;;</span><br><span class="line">A a; <span class="comment">// a is an lvalue...</span></span><br><span class="line"><span class="built_in">static_cast</span>&lt;A&amp;&amp;&gt;(a); <span class="comment">// ...but this expression is an xvalue.</span></span><br></pre></td></tr></table></figure>
+
+<p>上述代码将左值强制转换为一个将亡值。 该值仍可通过其左值名称进行标识，但作为将亡值，它现在可以移动了。也可以直接使用<code>std::move</code>将一个左值转换为一个将亡值，内部实现也是通过<code>static_cast</code>，其代码可读性更高。</p>
+<p><strong>纯右值(prvalue)</strong>：不可标识，但可移动的值。</p>
+<p>特征：</p>
+<ul>
+<li>只能在赋值语句的右边。</li>
+<li>通常是临时的，短暂存在，不具备持久性。</li>
+</ul>
+<p>纯右值可以是临时值、匿名对象、字面量（非字符串字面量）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">get_val</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="number">2025</span>; <span class="comment">// 纯右值</span></span><br><span class="line"><span class="built_in">A</span>();  <span class="comment">// 纯右值，一个匿名对象 </span></span><br><span class="line"><span class="built_in">get_val</span>(); <span class="comment">// 纯右值，非引用的函数返回值</span></span><br><span class="line"><span class="type">int</span> a = <span class="number">3</span>, b = <span class="number">4</span>; <span class="comment">// 左值</span></span><br><span class="line">a + b; <span class="comment">// 纯右值</span></span><br><span class="line">a++;  <span class="comment">// 纯右值</span></span><br><span class="line">a &gt; b; <span class="comment">// 纯右值</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-2-泛左值与右值"><a href="#1-3-2-泛左值与右值" class="headerlink" title="1.3.2 泛左值与右值"></a>1.3.2 泛左值与右值</h3><p>在此之上，<code>C++ 11</code> 还引申出了两种集合值类别：<strong>泛左值（glvalue）<strong>与</strong>右值(rvalue)</strong>。现在将所有值类别汇总，它们关系图如下：</p>
+<img src="C-深入理解右值引用与移动语义/C++值类别.png" >
+
+
+
+<p><strong>泛左值(glvalue，全称为 generalized lvalue)</strong>：一个可标识的值，它是包含左值(lvalue)和将亡值(xvalue)的超集。</p>
+<p><strong>右值(rvalue)</strong>：一个可移动的值，它是包含将亡值(xvalue)和纯右值(prvalue)的超集。</p>
+<p><font color=red >说明：后文如没有特别指出，左值指的是lvalue，右值指的是rvalue。</font></p>
+<h1 id="二、左值引用与右值引用"><a href="#二、左值引用与右值引用" class="headerlink" title="二、左值引用与右值引用"></a>二、左值引用与右值引用</h1><h2 id="2-1-左值引用"><a href="#2-1-左值引用" class="headerlink" title="2.1 左值引用"></a>2.1 左值引用</h2><p>左值引用根据是否带<code>const</code>分为非常量左值引用与常量左值引用两种。</p>
+<p><strong>非常量左值引用</strong>：使用 <code>&amp;</code> 符号表示，它可以引用一个左值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span> &amp;lref = x;  <span class="comment">// lref是x的左值引用</span></span><br><span class="line">lref = <span class="number">20</span>;      <span class="comment">// 修改x的值</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>常量左值引用</strong>：在非常量左值引用基础上加上<code>const</code>限定符，它即可引用一个左值也可引用一个右值，但不允许修改引用的对象。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> i = <span class="number">10</span>; <span class="comment">// 左值</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;l_ref1 = i; <span class="comment">// 引用一个左值</span></span><br><span class="line"><span class="type">const</span> A &amp;l_ref2 = <span class="built_in">A</span>(); <span class="comment">// 引用一个纯右值</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;l_ref3 = <span class="number">2</span>; <span class="comment">// 2为字面量，一个纯右值，本来只是一个符号，不占内存空间。常量左值引用变量l_ref3在定义时，编译器产生了一个临时变量，l_ref3实际引用的是临时变量，并且该临时变量生命周期被延长了。</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;l_ref4 = std::<span class="built_in">move</span>(i); <span class="comment">// 引用一个将亡值</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="2-2-右值引用"><a href="#2-2-右值引用" class="headerlink" title="2.2  右值引用"></a>2.2  右值引用</h2><p><strong>右值引用</strong>：使用 <code>&amp;&amp;</code> 符号表示，它可以引用一个右值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> &amp;&amp;r_ref1 = <span class="number">10</span>; <span class="comment">// 10为字面量，一个纯右值，本来只是一个符号，不占内存空间，右值引用变量r_ref1在定义时，编译器产生了一个临时变量，r_ref1实际引用的是临时变量，并且该临时变量生命周期被延长了。</span></span><br><span class="line">i = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> a = <span class="number">1</span>;   <span class="comment">// 左值</span></span><br><span class="line"><span class="type">int</span>&amp;&amp; r_ref2 = a; <span class="comment">// 错误,a为左值，右值引用不能引用左值</span></span><br><span class="line"><span class="type">int</span>&amp;&amp; r_ref3 = std::<span class="built_in">move</span>(a); <span class="comment">// 正确，std::move(a)返回一个将亡值</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-为何需要右值引用"><a href="#2-3-为何需要右值引用" class="headerlink" title="2.3 为何需要右值引用"></a>2.3 为何需要右值引用</h2><p>在<code>C++11</code>之前，没有直接移动对象方法。传递函数参数和返回值通常使用拷贝构造（或拷贝赋值），在某些情况下，对象拷贝后就立即被销毁了。如果对象较大 ，进行不必要的拷贝代价非常高 。 此时，如果是移动而非拷贝对象会大幅度提升性能。</p>
+<ol>
+<li><p><strong>移动语义：</strong> 传统的拷贝构造函数和拷贝赋值在处理大对象时会进行昂贵的深拷贝操作。右值引用允许将资源的所有权从一个对象转移到另一个对象，而不是进行实际的复制，从而提高了性能。</p>
+</li>
+<li><p><strong>完美转发：</strong> 右值引用是实现完美转发（perfect forwarding）的基础，允许函数接受任意类型的参数并将其传递给其他函数，同时保留原始参数的值类别。</p>
+</li>
+</ol>
+<h1 id="三、移动语义"><a href="#三、移动语义" class="headerlink" title="三、移动语义"></a>三、移动语义</h1><p>移动语义：对象之间转移资源的所有权而不进行昂贵的深拷贝。</p>
+<p>实现移动语义必须采用某种方式，让编译器知道什么时候拷贝对象，什么时候该移动对象资源。而右值引用表明：1. 所引用的对象将要被销毁  2. 该对象没有其他人继续使用。<strong>这两个特性意味着使用右值引用的代码可以自由地接管所引用的对象的资源</strong>。</p>
+<p>实现移动语义，通常可以向类提供“移动构造函数”，或者提供移动赋值运算符 (<strong><code>operator=</code></strong>)。</p>
+<h2 id="3-1-为什么需要移动语义"><a href="#3-1-为什么需要移动语义" class="headerlink" title="3.1 为什么需要移动语义"></a>3.1 为什么需要移动语义</h2><p>下面是一个示例，演示对临时对象、即将析构的对象的进行拷贝，会降低程序的效率。为防止编译器优化，更好看出效果。编译时版本不能高于<code>C++ 14</code>，并需加上编译参数<code>-fno-elide-constructors</code>关闭函数返回值优化<em>ROV</em>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A &amp;) &#123; std::cout &lt;&lt; <span class="string">&quot;A(const A&amp;)&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~A()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="string">&quot;show A&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">A <span class="title">make_a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A obj = <span class="built_in">make_a</span>();</span><br><span class="line">    obj.<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">A</span>()</span><br><span class="line"><span class="built_in">A</span>(<span class="type">const</span> A&amp;)</span><br><span class="line">~<span class="built_in">A</span>()</span><br><span class="line"><span class="built_in">A</span>(<span class="type">const</span> A&amp;)</span><br><span class="line">~<span class="built_in">A</span>()</span><br><span class="line">show A</span><br><span class="line">~<span class="built_in">A</span>()</span><br></pre></td></tr></table></figure>
+
+<p>从程序输出结果来看，当调用<em>make_a</em>函数时，调用类<em>A</em>构造函数构造对象<em>a</em>，输出”A()”。当执行return a时，编译器依据<em>a</em>对象拷贝构造了一个临时对象，实际返回的是该临时对象，所以输出”A(const A&amp;)。函数执行完局部变量<code>a</code>被析构，输出”<del>A()”。参照临时对象拷贝构造<em>obj</em>时输出“A(const A&amp;)”，然后临时对象析构输出“</del>A()”。执行obj.show函数时输出”show A”。然后<em>obj</em>对象析构输出“~A()”。<strong>从输出结果可以看出，程序在<em>make_a</em>函数返回和构造<em>obj</em>对象时执行了2次拷贝构造函数，如果<em>A</em>类型对象较大，会有昂贵的拷贝开销。并且看到，花费昂贵代价拷贝的临时对象在拷贝构造完<em>obj</em>对象后，它便立即销毁了，资源得到巨大浪费</strong>。</p>
+<h2 id="3-2-移动构造函数"><a href="#3-2-移动构造函数" class="headerlink" title="3.2 移动构造函数"></a>3.2 移动构造函数</h2><p><strong>移动构造函数用于从一个右值对象初始化另一个对象，通过移动其资源来避免不必要的拷贝</strong>。</p>
+<p>类的移动构造函数通常步骤为：</p>
+<p>1）定义一个空的构造函数方法，该方法采用一个对类类型的右值引用作为参数<br>2）在移动构造函数中，将源对象中的类数据成员添加到要构造的对象<br>3）将源对象的数据成员分配给默认值。 这可以防止析构函数多次释放资源（如内存）</p>
+<p>下面有一个用于管理内存缓冲区的 <em>MemoryBlock</em>类，已有构造函数、拷贝构造函数、重载赋值运算符。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MemoryBlock</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Simple constructor that initializes the resource.</span></span><br><span class="line">   <span class="function"><span class="keyword">explicit</span> <span class="title">MemoryBlock</span><span class="params">(<span class="type">size_t</span> length)</span></span></span><br><span class="line"><span class="function">      : _length(length)</span></span><br><span class="line"><span class="function">      , _data(new int[length])</span></span><br><span class="line"><span class="function">   &#123;</span></span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;In MemoryBlock(size_t). length = &quot;</span></span><br><span class="line">                &lt;&lt; _length &lt;&lt; <span class="string">&quot;.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Destructor.</span></span><br><span class="line">   ~<span class="built_in">MemoryBlock</span>()</span><br><span class="line">   &#123;</span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;In ~MemoryBlock(). length = &quot;</span></span><br><span class="line">                &lt;&lt; _length &lt;&lt; <span class="string">&quot;.&quot;</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (_data != <span class="literal">nullptr</span>)</span><br><span class="line">      &#123;</span><br><span class="line">         std::cout &lt;&lt; <span class="string">&quot; Deleting resource.&quot;</span>;</span><br><span class="line">         <span class="comment">// Delete the resource.</span></span><br><span class="line">         <span class="keyword">delete</span>[] _data;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      std::cout &lt;&lt; std::endl;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Copy constructor.</span></span><br><span class="line">   <span class="built_in">MemoryBlock</span>(<span class="type">const</span> MemoryBlock&amp; other)</span><br><span class="line">      : _length(other._length)</span><br><span class="line">      , _data(<span class="keyword">new</span> <span class="type">int</span>[other._length])</span><br><span class="line">   &#123;</span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;In MemoryBlock(const MemoryBlock&amp;). length = &quot;</span></span><br><span class="line">                &lt;&lt; other._length &lt;&lt; <span class="string">&quot;. Copying resource.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">      std::<span class="built_in">copy</span>(other._data, other._data + _length, _data);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Copy assignment operator.</span></span><br><span class="line">   MemoryBlock&amp; <span class="keyword">operator</span>=(<span class="type">const</span> MemoryBlock&amp; other)</span><br><span class="line">   &#123;</span><br><span class="line">      std::cout &lt;&lt; <span class="string">&quot;In operator=(const MemoryBlock&amp;). length = &quot;</span></span><br><span class="line">                &lt;&lt; other._length &lt;&lt; <span class="string">&quot;. Copying resource.&quot;</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other)</span><br><span class="line">      &#123;</span><br><span class="line">         <span class="comment">// Free the existing resource.</span></span><br><span class="line">         <span class="keyword">delete</span>[] _data;</span><br><span class="line"></span><br><span class="line">         _length = other._length;</span><br><span class="line">         _data = <span class="keyword">new</span> <span class="type">int</span>[_length];</span><br><span class="line">         std::<span class="built_in">copy</span>(other._data, other._data + _length, _data);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Retrieves the length of the data resource.</span></span><br><span class="line">   <span class="function"><span class="type">size_t</span> <span class="title">Length</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> _length;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">   <span class="type">size_t</span> _length; <span class="comment">// The length of the resource.</span></span><br><span class="line">   <span class="type">int</span>* _data; <span class="comment">// The resource.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>跟<em>MemoryBlock</em>类加上移动构造函数:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">MemoryBlock</span>(MemoryBlock&amp;&amp; other) <span class="keyword">noexcept</span></span><br><span class="line">   : _data(<span class="literal">nullptr</span>)</span><br><span class="line">   , _length(<span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">// Copy the data pointer and its length from the</span></span><br><span class="line">   <span class="comment">// source object.</span></span><br><span class="line">   _data = other._data;</span><br><span class="line">   _length = other._length;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Release the data pointer from the source object so that</span></span><br><span class="line">   <span class="comment">// the destructor does not free the memory multiple times.</span></span><br><span class="line">   other._data = <span class="literal">nullptr</span>;</span><br><span class="line">   other._length = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3-移动赋值"><a href="#3-3-移动赋值" class="headerlink" title="3.3 移动赋值"></a>3.3 移动赋值</h2><p><strong>重载移动赋值运算符用于从一个右值对象赋值给一个已存在对象，通过移动其资源来避免不必要的拷贝</strong>。</p>
+<p>1）定义一个空的赋值运算符，该运算符采用一个对类类型的右值引用作为参数并返回一个对类类型的引用<br>2）在移动赋值运算符中，如果尝试将对象赋给自身，则添加不执行运算的条件语句<br>3）在条件语句中，将数据成员从源对象转移到要构造的对象，释放原构造对象资源<br>4）返回对当前对象的引用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">MemoryBlock&amp; <span class="keyword">operator</span>=(MemoryBlock&amp;&amp; other) <span class="keyword">noexcept</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other)</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="comment">// Free the existing resource.</span></span><br><span class="line">      <span class="keyword">delete</span>[] _data;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Copy the data pointer and its length from the</span></span><br><span class="line">      <span class="comment">// source object.</span></span><br><span class="line">      _data = other._data;</span><br><span class="line">      _length = other._length;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Release the data pointer from the source object so that</span></span><br><span class="line">      <span class="comment">// the destructor does not free the memory multiple times.</span></span><br><span class="line">      other._data = <span class="literal">nullptr</span>;</span><br><span class="line">      other._length = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果为类同时提供了移动构造函数和移动赋值运算符，则可以编写移动构造函数来调用移动赋值运算符，从而消除冗余代码。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">MemoryBlock</span>(MemoryBlock&amp;&amp; other) <span class="keyword">noexcept</span></span><br><span class="line">   : _data(<span class="literal">nullptr</span>)</span><br><span class="line">   , _length(<span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">   *<span class="keyword">this</span> = std::<span class="built_in">move</span>(other);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><font color=red >注意：移动构造函数或移动赋值的参数千万不能设置成const类型的右值引用，因为资源无法转移而导致移动语义失效。</font></p>
+<p>现在让我们为<em>3.1</em>节中示例增加移动构造与移动赋值观察下效果：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;A()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">A</span>(<span class="type">const</span> A &amp;) &#123; std::cout &lt;&lt; <span class="string">&quot;A(const A&amp;)&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">A</span>(A &amp;&amp;) <span class="keyword">noexcept</span> &#123; std::cout &lt;&lt; <span class="string">&quot;A(A &amp;&amp;)&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    A &amp;<span class="keyword">operator</span>=(A &amp;&amp;) <span class="keyword">noexcept</span></span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;operator=(A&amp;&amp;)&#123;&quot;</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">A</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~A()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="string">&quot;show A&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">A <span class="title">make_a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A a;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A obj = <span class="built_in">make_a</span>();</span><br><span class="line">    obj.<span class="built_in">show</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">A</span>()</span><br><span class="line"><span class="built_in">A</span>(A &amp;&amp;)</span><br><span class="line">~<span class="built_in">A</span>()</span><br><span class="line"><span class="built_in">A</span>(A &amp;&amp;)</span><br><span class="line">~<span class="built_in">A</span>()</span><br><span class="line">show A</span><br><span class="line">~<span class="built_in">A</span>()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，程序在<em>make_a</em>函数返回和构造<em>obj</em>对象时调用的是移动构造函数而不是拷贝构造函数，程序运行效率大幅提高。</p>
+<h2 id="3-4-异常安全性"><a href="#3-4-异常安全性" class="headerlink" title="3.4 异常安全性"></a>3.4 异常安全性</h2><p>移动语义“ 窃取” 资源，而不是分配资源。不建议在移动构造与移动赋值中抛出异常。因为移动资源过程中如果抛出异常，此时对象内资源可能一部分转移走了，另一部分没有转移，将导致源对象与目标对象都不完整情况，带来的后果是无法预料的。当编写一个不抛出异常的函数可用<code>noexcept</code>关键字说明，它告诉编译器和调用者：此函数不会抛出异常，如果真的抛出则编译器会直接调用 <code>std::terminate()</code> 终止程序。</p>
+<p>许多STL容器（如 std::vector）在扩容或重新分配元素时，会判断移动构造函数是否为 <code>noexcept</code>。如果移动构造是<code>noexcept</code>，则调用。否则会退回到使用拷贝构造。</p>
+<p><strong>注意：必须在类头文件声明和定义中 (如 果定义在类外的话) 都指定<code>noexcept</code></strong></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>谢丙堃 &lt;&lt;现代C++语言核心特性解析&gt;&gt;</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9sZWFybi5taWNyb3NvZnQuY29tL3poLWNuL2NwcC9jcHAvbW92ZS1jb25zdHJ1Y3RvcnMtYW5kLW1vdmUtYXNzaWdubWVudC1vcGVyYXRvcnMtY3BwP3ZpZXc9bXN2Yy0xNzA=">microsoft  C++ 语言文档<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>JiaLong Kang
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.kjlcloud.com/C-%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E4%B8%8E%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89.html" title="C++ 深入理解右值引用与移动语义">https://blog.kjlcloud.com/C-深入理解右值引用与移动语义.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/C-11/" rel="tag"># C++ 11</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/C-17-%E5%B7%A5%E5%85%B7%E7%B1%BBoptional%E3%80%81variant%E3%80%81any.html" rel="prev" title="C++17 工具类optional、variant、any">
+                  <i class="fa fa-angle-left"></i> C++17 工具类optional、variant、any
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments giscus-container">
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">JiaLong Kang</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>Word count total: </span>
+    <span title="Word count total">152k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>Reading time total &asymp;</span>
+    <span title="Reading time total">25:18</span>
+  </span>
+</div>
+  <div class="powered-by">Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy9taXN0Lw==">NexT.Mist</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.6.0/pjax.min.js" integrity="sha256-vxLn1tSKWD4dqbMRyv940UYw4sXgMtYcK6reefzZrao=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-app-compat.js" integrity="sha256-k2eD8Bl04gp35v4S01cNbO+3UeLK6mVqpOyUJz4aXzY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/11.1.0/firebase-firestore-compat.js" integrity="sha256-r1EpenNle+MZs+KB73PFJnrmIF3k29t5XGrSqfZ9PPw=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="firestore" type="application/json">{"enable":true,"collection":"articles","apiKey":"AIzaSyBCFUzgKljVw79xwbpPzgulwgSDHq4qYg0","projectId":"kjl-blog"}</script>
+  <script src="/js/third-party/statistics/firestore.js"></script>
+
+
+
+<script class="next-config" data-name="giscus" type="application/json">{"enable":true,"repo":"JiaLong-Kang/JiaLong-Kang.github.io","repo_id":"R_kgDOOBwtTw","category":"Announcements","category_id":"DIC_kwDOOBwtT84Cnevb","mapping":"pathname","strict":0,"reactions_enabled":1,"emit_metadata":1,"theme":"light","lang":"en","crossorigin":"anonymous","input_position":"bottom","loading":"lazy"}</script>
+
+<script>
+document.addEventListener('page:loaded', () => {
+  if (!CONFIG.page.comments) return;
+
+  NexT.utils.loadComments('.giscus-container')
+    .then(() => NexT.utils.getScript('https://giscus.app/client.js', {
+      attributes: {
+        async                   : true,
+        crossOrigin             : 'anonymous',
+        'data-repo'             : CONFIG.giscus.repo,
+        'data-repo-id'          : CONFIG.giscus.repo_id,
+        'data-category'         : CONFIG.giscus.category,
+        'data-category-id'      : CONFIG.giscus.category_id,
+        'data-mapping'          : CONFIG.giscus.mapping,
+        'data-strict'           : CONFIG.giscus.strict,
+        'data-reactions-enabled': CONFIG.giscus.reactions_enabled,
+        'data-emit-metadata'    : CONFIG.giscus.emit_metadata,
+        'data-theme'            : CONFIG.giscus.theme,
+        'data-lang'             : CONFIG.giscus.lang,
+        'data-input-position'   : CONFIG.giscus.input_position,
+        'data-loading'          : CONFIG.giscus.loading
+      },
+      parentNode: document.querySelector('.giscus-container')
+    }));
+});
+</script>
+
+</body>
+</html>
